@@ -89,14 +89,14 @@
                                             <?php foreach (json_decode($detail['data'],true) as $key => $value): ?>
                                                 <div class="form-group col-ms-12" style="padding: 0px;margin-bottom:5px;" id="field_<?php echo $i;?>"  draggable="<?php echo ($i <= 6)? 'false' : 'true'; ?>" ondrop="drop(event)" ondragover="allowDrop(event)"> 
                                                     <div class="col-xs-12 drop-drag" draggable="<?php echo ($i <= 6)? 'false' : 'true'; ?>" ondragstart="drag(event)">
-                                                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;background: #089131">
-                                                            <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-10 check-collapse" style="height:35px;padding-top:5px">
-                                                                <i class="fa fa-gears" style="color:green;"></i> 
-                                                                Cấu hình field <span><?php echo $i;?></span> 
+                                                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;background: #089131;text-align: left;">
+                                                            <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-10 check-collapse collapsed" style="height:35px;padding-top:2px" aria-expanded="false" onclick="check_icon(this,'0','-90')">
+                                                                <i class="fa fa-chevron-down right" style="color:#fff;float:left;font-size:1.7em;transform: rotate(-90deg);"></i>
+                                                                <span style="padding-left:10px;font-weight: bold;font-size: 1.4em;"><?php echo $i;?></span> <b style="font-size: 1.4em;">. <?php echo $value['title']['vi']; ?> </b>
                                                             </span>
                                                             <i style="float: right;padding-right:5px;<?php echo ($i <= 6) ? 'display: none;' : '';?>" class="fa-2x fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
                                                         </div>
-                                                        <div id="demo<?php echo $i;?>" class="collapse in form-group">
+                                                        <div id="demo<?php echo $i;?>" class="collapse form-group" aria-expanded="false">
                                                             <div class="col-xs-12" style="padding: 0px;">
                                                                 <div class="col-sm-6 col-xs-12">
                                                                     <label class="control-label" for="inputError">Mô tả</label>

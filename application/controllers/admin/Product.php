@@ -47,8 +47,11 @@ class Product extends Admin_Controller{
 	public function create($id_template){
         if($id_template &&  is_numeric($id_template) && ($id_template > 0)){
     		$this->load->helper('form');
-            if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $id_template)) != 0){
+            if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $id_template, 'type' => '2')) != 0){
                 $this->data['detail'] = $this->templates_model->get_by_id($id_template);
+            }else{
+                $this->session->set_flashdata('message_error',MESSAGE_ISSET_CONFIG_ERROR);
+                redirect('admin/'. $this->data['controller'] .'', 'refresh');
             }
             $product_category = $this->product_category_model->get_by_parent_id_when_active(null,'asc');
             $this->build_new_category($product_category,0,$this->data['product_category']);

@@ -32,6 +32,7 @@
 				            	$url = $item['url'] ? $item['url'] : 'javascript:void(0)';
 				            	$details.= '<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="' . $url . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . $item['title_vi'] . '</a>';
 			    				build_new_category($detail,$item['id'],$details);
+			    				$details.='</li>';
 				            }
 				        }
 			    	?>
@@ -52,14 +53,14 @@
             }
         }
         if ($cate_child){
+        	$result.= $char;
             foreach ($cate_child as $key => $value){
-            		$url = $value['url'] ? $value['url'] : 'javascript:void(0)';
-		            $result.= $char;
-		            $result.='<li> <a class="dropdown-item dropdown-toggle" href="' . $url . '" >' . $value['title_vi'] . '</a>';
-		            unset($categorie[$key]);
-		            build_new_category($categorie, $value['id'],$result, $id, "<ul class='dropdown-menu' aria-labelledby='1'>");
-		            $result.= '</ul></li>';
+        		$url = $value['url'] ? $value['url'] : 'javascript:void(0)';
+	            $result.='<li> <a class="dropdown-item dropdown-toggle" href="' . $url . '" >' . $value['title_vi'] . '</a>';
+	            unset($categorie[$key]);
+	            build_new_category($categorie, $value['id'],$result, $id, "<ul class='dropdown-menu' aria-labelledby='1'>");
             }
+            $result.= '</ul></li>';
         }
     }
 ?>

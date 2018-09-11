@@ -48,6 +48,11 @@
                     </ul>
                 </li>
                 <li class="active">
+                    <a href="<?php echo base_url('admin/templates') ?>">
+                        <i class="fa fa-cubes"></i> <span>Templates</span>
+                    </a>
+                </li>
+                <li class="active">
                     <a href="<?php echo base_url('admin/product') ?>">
                         <i class="fa fa-cubes"></i> <span>Product</span>
                     </a>

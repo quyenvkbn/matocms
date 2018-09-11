@@ -11,6 +11,7 @@
         background-color: #089131;
     }
 </style>
+<input type="text" name="detail_templates" value='{}' placeholder="" class="form-control hidden" id="detail_templates"/>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -74,18 +75,24 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-12" id="append_field">
-                                            <h4 style="margin-top: 5px;font-weight: bold;color:red">Field bắt buộc</h4>
+                                            <h4 style="margin-top: 5px;font-weight: bold;color:red">Nội dung bắt buộc</h4>
+                                            <?php 
+                                                $title = array(
+                                                    'vi' => array('Hình ảnh', 'Slug', 'Danh mục', 'Tiêu đề', 'Mô tả', 'Nội dung'),
+                                                    'en' => array('Image', 'Slug', 'Category', 'Title', 'Description', 'Content'),
+                                                );
+                                            ?>
                                             <?php for ($i = 1; $i < 7;$i++): ?>
                                                 <div class="form-group col-ms-12" style="padding: 0px;margin-bottom:5px;" id="field_<?php echo $i;?>"  draggable="false" ondrop="drop(event)" ondragover="allowDrop(event)"> 
                                                     <div class="col-xs-12 drop-drag" draggable="false" ondragstart="drag(event)">
-                                                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;background: #089131">
-                                                            <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-12 check-collapse" style="height:35px;padding-top:5px">
-                                                                <i class="fa fa-gears" style="color:green;"></i> 
-                                                                Cấu hình field <span><?php echo $i;?></span> 
+                                                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;background: #089131;text-align: left;">
+                                                            <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-12 check-collapse collapsed" style="height:35px;padding-top:2px;" aria-expanded="false" onclick="check_icon(this,'0','-90')">
+                                                                <i class="fa fa-chevron-down right" style="color:#fff;float:left;font-size:1.7em;transform: rotate(-90deg);"></i>
+                                                                <span style="padding-left:10px;font-weight: bold;font-size: 1.4em;"><?php echo $i;?></span><b style="font-size: 1.4em;">. <?php echo $title['vi'][$i-1] ?></b>
                                                             </span>
                                                             <i style="float: right;padding-right:5px;marrgin-top:-10px;display: none;" class="fa-2x fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
                                                         </div>
-                                                        <div id="demo<?php echo $i;?>" class="collapse in form-group">
+                                                        <div id="demo<?php echo $i;?>" class="collapse form-group" aria-expanded="false" style="height: 0px;">
                                                             <div class="col-xs-12" style="padding: 0px;">
                                                                 <div class="col-sm-6 col-xs-12">
                                                                     <label class="control-label" for="inputError">Mô tả</label>
@@ -114,7 +121,7 @@
                                                                 <div class="col-sm-6 col-xs-12 checkbox_field">
                                                                     <?php if ($i == 1): ?>
                                                                         <div class="check_multiple" style="padding:0px;">
-                                                                            <label class="checkbox-inline"><input type="checkbox" name="multiple_image" >Chọn nhiều ảnh</label>
+                                                                            <label class="checkbox-inline" ><input type="checkbox" name="multiple_image" disabled >Chọn nhiều ảnh</label>
                                                                         </div>
                                                                     <?php elseif ($i == 3): ?>
                                                                         <div class="checkbox check_multiple" style="padding:0px;">
@@ -156,12 +163,6 @@
                                                                         <?php endforeach ?>
                                                                     </ul>
                                                                     <div class="tab-content">
-                                                                        <?php 
-                                                                        $title = array(
-                                                                            'vi' => array('Hình ảnh', 'Slug', 'Danh mục', 'Tiêu đề', 'Mô tả', 'Nội dung'),
-                                                                            'en' => array('Image', 'Slug', 'Category', 'Title', 'Description', 'Content'),
-                                                                        ) ;
-                                                                        ?>
                                                                         <?php foreach ($page_languages as $key => $value): ?>
                                                                             <div role="tabpanel" class="tab-pane fade <?php echo ($h == count($page_languages))? 'in active' : '' ?>" id="<?php echo $key.$i ?>">
                                                                                 <div class="box box-default" style="border-top:none;">
@@ -193,7 +194,7 @@
                                                     </div>
                                                 </div>
                                             <?php endfor ?>
-                                            <h4 style="margin-top: 5px;font-weight: bold;color:green">Field tự thêm</h4>
+                                            <h4 style="margin-top: 15px;font-weight: bold;color:green">Nội dung tự thêm</h4>
                                         </div>
                                         <div class="col-xs-12">
                                             <i class="fa-2x fa fa-plus-square" id="addpend-one-field" onclick="addOneField()" style="float: right;cursor: pointer;"></i>
