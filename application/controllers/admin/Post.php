@@ -63,8 +63,11 @@ class Post extends Admin_Controller{
         if($id_template &&  is_numeric($id_template) && ($id_template > 0)){
             $this->load->helper('form');
             $this->load->library('form_validation');
-            if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $id_template)) != 0){
+            if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $id_template,'type' => '1')) != 0){
                 $this->data['detail'] = $this->templates_model->get_by_id($id_template);
+            }else{
+                $this->session->set_flashdata('message_error',MESSAGE_ISSET_CONFIG_ERROR);
+                redirect('admin/'. $this->data['controller'] .'', 'refresh');
             }
             $post_category = $this->post_category_model->get_by_parent_id(null,'asc');
             $this->data['post_category'] = $post_category;

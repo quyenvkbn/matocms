@@ -137,6 +137,10 @@ defined('MESSAGE_REMOVE_ERROR') OR define('MESSAGE_REMOVE_ERROR', 'Xóa thất b
  * Message Success code
  */
 defined('MESSAGE_ISSET_ERROR') OR define('MESSAGE_ISSET_ERROR', 'ID không tồn tại!');
+/**
+ * Message Success code
+ */
+defined('MESSAGE_ISSET_CONFIG_ERROR') OR define('MESSAGE_ISSET_CONFIG_ERROR', 'Cấu hình không tồn tại!');
 
 /**
  * Message check id product category 

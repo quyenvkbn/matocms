@@ -62,7 +62,6 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>Tên cấu hình</th>
-                                    <th>Trạng thái</th>
                                     <th>Detail</th>
                                     <th>Action</th>
                                 </tr>
@@ -75,23 +74,13 @@
                                         <td><?php echo $i++ ?></td>
                                         <td><?php echo $value['title'] ?></td>
                                         <td>
-                                            <?php echo ($value['is_activated'] == 1)? '<span class="label label-success">Đang sử dụng</span>' : '<span class="label label-warning">Không sử dụng</span>' ?>   
-                                        </td>
-                                        <td>
                                             <a href="<?php echo base_url('admin/'.$controller.'/detail/'.$value['id']) ?>"
                                             <button class="btn btn-default btn-sm" type="button" data-toggle="collapse" data-target="#collapse_1" aria-expanded="false" aria-controls="collapse_1">See Detail</button>
                                         </td>
                                         <td>
-                                            <?php if ($value['is_activated'] == 0): ?>
-                                                <a href="javascript:void(0);" onclick="active('<?php echo $controller; ?>', <?php echo $value['id'] ?>, 'Chăc chắn Bật cấu hình')" class="dataActionDelete" title="Bật cấu hình"><i class="fa fa-low-vision" aria-hidden="true"></i> </a>
-                                            <?php else: ?>
-                                                <a href="javascript:void(0);" onclick="deactive('<?php echo $controller; ?>', <?php echo $value['id'] ?>, 'Chăc chắn tắt cấu hình')" class="dataActionDelete" title="Tắt cấu hình"><i class="fa fa-eye" aria-hidden="true"></i> </a>
-                                            <?php endif ?>
-
                                             <a href="<?php echo base_url('admin/'.$controller.'/edit/'. $value['id']) ?>" class="dataActionEdit"><i class="fa fa-pencil" aria-hidden="true"></i> </a>
                                             &nbsp&nbsp&nbsp
                                             <a href="javascript:void(0);" onclick="remove('<?php echo $controller; ?>', <?php echo $value['id'] ?>)" class="dataActionDelete"><i class="fa fa-remove" aria-hidden="true"></i> </a>
-                                            <!-- <a href="<?php echo base_url('admin/'.$controller.'/remove/'.$value['id']); ?>" class="dataActionDelete"><i class="fa fa-remove" aria-hidden="true"></i> </a> -->
                                         </td>
 
                                     </tr>
@@ -99,7 +88,6 @@
                                     <tr>
                                         <th>No.</th>
                                         <th>Tên cấu hình</th>
-                                        <th>Trạng thái</th>
                                         <th>Detail</th>
                                         <th>Action</th>
                                     </tr>
