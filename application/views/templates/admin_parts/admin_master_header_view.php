@@ -44,7 +44,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <script type="text/javascript" src="<?php echo site_url('tinymce/tinymce.min.js') ?>" ></script>
 
-
+    <style type="text/css">
+      .btn-primary, .pagination li.active a{
+        background: #089131;
+        color:yellow;
+      }
+        .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
+            background-color: #ffcc00;
+            color: #089131;
+        }
+        .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
+            border-top-color: #ffcc00;
+        }
+        .list-group-item.active>.badge, .nav-pills>.active>a>.badge{
+            color: #ffcc00;
+            background-color: #089131;
+        }
+    </style>
 </head>
 
 <body class="hold-transition skin-black-light sidebar-mini">

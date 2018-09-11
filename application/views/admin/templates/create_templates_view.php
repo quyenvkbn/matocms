@@ -1,15 +1,17 @@
 <style type="text/css" media="screen">
-    .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
-        background-color: #ffcc00;
-        color: #089131;
-    }
-    .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
-        border-top-color: #ffcc00;
-    }
-    .list-group-item.active>.badge, .nav-pills>.active>a>.badge{
-        color: #ffcc00;
-        background-color: #089131;
-    }
+    .drop-drag div.btn >span:before {
+        font-family: "Glyphicons Halflings";
+        content: "\e114";
+        float: left;
+        margin-top: -1px;
+        font-size: 1.3em;transition: .3s;
+      }
+      /* Icon when the collapsible content is hidden */
+      .drop-drag div.btn >span.collapsed:before {
+        content: "\e080";
+        font-size: 1.3em;
+        margin-top: -1px;transition: .3s;
+      }
 </style>
 <input type="text" name="detail_templates" value='{}' placeholder="" class="form-control hidden" id="detail_templates"/>
 <div class="content-wrapper">
@@ -85,10 +87,9 @@
                                             <?php for ($i = 1; $i < 7;$i++): ?>
                                                 <div class="form-group col-ms-12" style="padding: 0px;margin-bottom:5px;" id="field_<?php echo $i;?>"  draggable="false" ondrop="drop(event)" ondragover="allowDrop(event)"> 
                                                     <div class="col-xs-12 drop-drag" draggable="false" ondragstart="drag(event)">
-                                                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;background: #089131;text-align: left;">
-                                                            <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-12 check-collapse collapsed" style="height:35px;padding-top:2px;" aria-expanded="false" onclick="check_icon(this,'0','-90')">
-                                                                <i class="fa fa-chevron-down right" style="color:#fff;float:left;font-size:1.7em;transform: rotate(-90deg);"></i>
-                                                                <span style="padding-left:10px;font-weight: bold;font-size: 1.4em;"><?php echo $i;?></span><b style="font-size: 1.4em;">. <?php echo $title['vi'][$i-1] ?></b>
+                                                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;text-align: left;">
+                                                            <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-12 check-collapse collapsed" style="height:35px;padding-top:2px;" aria-expanded="false">
+                                                                <span style="padding-left:10px;font-weight: 500;font-size: 1.2em;"><?php echo $i;?></span><b style="font-size: 1.2em;font-weight: 500">. <?php echo $title['vi'][$i-1] ?></b>
                                                             </span>
                                                             <i style="float: right;padding-right:5px;marrgin-top:-10px;display: none;" class="fa-2x fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
                                                         </div>
