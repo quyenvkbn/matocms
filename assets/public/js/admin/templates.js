@@ -61,11 +61,10 @@ function addField(number){
         })
         html += `<div class="form-group col-ms-12" style="padding: 0px;margin-bottom:5px;" id="field_${i+1}"  draggable="true" ondrop="drop(event)" ondragover="allowDrop(event)"> 
                     <div class="col-xs-12 drop-drag" draggable="true" ondragstart="drag(event)">
-                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;background: #089131;text-align:left;">
-                            <span data-toggle="collapse" data-target="#demo${i+1}" class="col-xs-10 check-collapse" style="height:35px;padding-top:2px;left:30px;" onclick="check_icon(this,'-90','0')">
-                                <i class="fa fa-chevron-down right" style="color:#fff;float:left;margin-left:-30px;font-size:1.7em;"></i>
-                                <span style="padding-left:5px;font-weight: bold;font-size: 1.4em;">${i+1}</span>
-                                <b style="font-size: 1.4em;"></b> 
+                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;text-align:left;">
+                            <span data-toggle="collapse" data-target="#demo${i+1}" class="col-xs-10 check-collapse" style="height:35px;padding-top:2px;">
+                                <span style="padding-left:10px;font-weight: 500;font-size: 1.2em;">${i+1}</span>
+                                <b style="font-size: 1.1em;font-weight: 500;"></b> 
                             </span>
                             <i style="float: right;padding-right:5px;marrgin-top:-10px;" class="fa-2x fa fa-close remove" onclick="remove_field(${i+1})"></i>
                         </div>
@@ -152,11 +151,10 @@ function addOneField(){
     })
     html += `<div class="form-group col-ms-12" style="padding: 0px;margin-bottom:5px;" id="field_${number+1}"  draggable="true" ondrop="drop(event)" ondragover="allowDrop(event)"> 
                 <div class="col-xs-12 drop-drag" draggable="true" ondragstart="drag(event)">
-                    <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;background: #089131;text-align:left;">
-                        <span data-toggle="collapse" data-target="#demo${number+1}" class="col-xs-10 check-collapse" style="height:35px;padding-top:2px;left:30px;" onclick="check_icon(this,'-90','0')">
-                            <i class="fa fa-chevron-down right" style="color:#fff;float:left;margin-left:-30px;font-size:1.7em;"></i>
-                            <span style="padding-left:5px;font-weight: bold;font-size: 1.4em;">${number+1}</span>
-                            <b style="font-size: 1.4em;"></b> 
+                    <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;text-align:left;">
+                        <span data-toggle="collapse" data-target="#demo${number+1}" class="col-xs-10 check-collapse" style="height:35px;padding-top:2px;">
+                            <span style="padding-left:10px;font-weight: 500;font-size: 1.2em;">${number+1}</span>
+                            <b style="font-size: 1.1em;font-weight: 500;"></b> 
                         </span>
                         <i style="float: right;padding-right:5px;marrgin-top:-10px;" class="fa-2x fa fa-close remove" onclick="remove_field(${number+1})"></i>
                     </div>
@@ -701,17 +699,6 @@ function change_title(ev){
     }else{
         ev.closest('.required').querySelector('span').classList.add("hidden");
         ev.parentElement.classList.remove("has-error");
-    }
-}
-function check_icon(ev,number1,number2){
-    if(ev.querySelector('i').getAttribute('class') == 'fa fa-chevron-down right'){
-        ev.querySelector('i').style.transform = `rotate(${number1}deg)`;
-        ev.querySelector('i').style.transition = '.3s';
-        ev.querySelector('i').setAttribute('class','fa fa-chevron-down down');
-    }else{
-        ev.querySelector('i').style.transform = `rotate(${number2}deg)`;
-        ev.querySelector('i').style.transition = '.3s';
-        ev.querySelector('i').setAttribute('class','fa fa-chevron-down right');
     }
 }
 // check checkbox required add input text required

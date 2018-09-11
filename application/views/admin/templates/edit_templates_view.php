@@ -1,15 +1,17 @@
 <style type="text/css" media="screen">
-    .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
-        background-color: #ffcc00;
-        color: #089131;
-    }
-    .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
-        border-top-color: #ffcc00;
-    }
-    .list-group-item.active>.badge, .nav-pills>.active>a>.badge{
-        color: #ffcc00;
-        background-color: #089131;
-    }
+    .drop-drag div.btn >span:before {
+        font-family: "Glyphicons Halflings";
+        content: "\e114";
+        float: left;
+        margin-top: -1px;
+        font-size: 1.3em;transition: .3s;
+      }
+      /* Icon when the collapsible content is hidden */
+      .drop-drag div.btn >span.collapsed:before {
+        content: "\e080";
+        font-size: 1.3em;
+        margin-top: -1px;transition: .3s;
+      }
 </style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -89,12 +91,11 @@
                                             <?php foreach (json_decode($detail['data'],true) as $key => $value): ?>
                                                 <div class="form-group col-ms-12" style="padding: 0px;margin-bottom:5px;" id="field_<?php echo $i;?>"  draggable="<?php echo ($i <= 6)? 'false' : 'true'; ?>" ondrop="drop(event)" ondragover="allowDrop(event)"> 
                                                     <div class="col-xs-12 drop-drag" draggable="<?php echo ($i <= 6)? 'false' : 'true'; ?>" ondragstart="drag(event)">
-                                                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;background: #089131;text-align: left;">
-                                                            <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-10 check-collapse collapsed" style="height:35px;padding-top:2px" aria-expanded="false" onclick="check_icon(this,'0','-90')">
-                                                                <i class="fa fa-chevron-down right" style="color:#fff;float:left;font-size:1.7em;transform: rotate(-90deg);"></i>
-                                                                <span style="padding-left:10px;font-weight: bold;font-size: 1.4em;"><?php echo $i;?></span> <b style="font-size: 1.4em;">. <?php echo $value['title']['vi']; ?> </b>
+                                                        <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;text-align: left;">
+                                                            <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-10 check-collapse collapsed" style="height:35px;padding-top:2px" aria-expanded="false">
+                                                                <span style="padding-left:10px;font-weight: 500;font-size: 1.2em;"><?php echo $i;?></span> <b style="font-size: 1.1em;font-weight: 500;">. <?php echo $value['title']['vi']; ?> </b>
                                                             </span>
-                                                            <i style="float: right;padding-right:5px;<?php echo ($i <= 6) ? 'display: none;' : '';?>" class="fa-2x fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
+                                                            <i style="float: right;padding-right:5px;font-size:1.8em;<?php echo ($i <= 6) ? 'display: none;' : '';?>" class="fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
                                                         </div>
                                                         <div id="demo<?php echo $i;?>" class="collapse form-group" aria-expanded="false">
                                                             <div class="col-xs-12" style="padding: 0px;">
@@ -196,9 +197,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="box box-default">
+                        <div class="box box-default" >
                             <div class="box-body">
-                                <div class="col-xs-12 nav-product" style="">
+                                <div class="col-xs-12 nav-product" >
                                     <ul class="nav nav-tabs" role="tablist" id="nav-product">
                                         <li><button class="btn btn-primary" id="go-back" onclick="history.back(-1);" >Go back</button></li>
                                         <span type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary"  onclick="check_validate(this)" style="float: right;">Xem Form</span>
