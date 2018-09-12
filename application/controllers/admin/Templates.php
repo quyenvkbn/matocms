@@ -22,12 +22,12 @@ class Templates extends Admin_Controller {
         }
         $this->load->library('pagination');
         $per_page = 10;
-        $total_rows  = $this->templates_model->count_search($this->data['keyword']);
+        $total_rows  = $this->templates_model->count_search_not_lang($this->data['keyword']);
         $config = $this->pagination_config(base_url('admin/'.$this->data['controller'].'/index'), $total_rows, $per_page, 4);
         $this->data['page'] = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
         $this->pagination->initialize($config);
         $this->data['page_links'] = $this->pagination->create_links();
-        $this->data['result'] = $this->templates_model->get_all_with_pagination_search('desc', $per_page, $this->data['page'], $this->data['keyword']);
+        $this->data['result'] = $this->templates_model->get_all_with_pagination_search_not_lang('desc', $per_page, $this->data['page'], $this->data['keyword']);
         $this->render('admin/templates/list_templates_view');
     }
 
@@ -121,7 +121,7 @@ class Templates extends Admin_Controller {
                 $this->session->set_flashdata('message_error',MESSAGE_ISSET_ERROR);
                 redirect('admin/templates', 'refresh');
             }
-            $detail = $this->templates_model->get_by_id($id);
+            $detail = $this->templates_model->get_by_id_templates($id);
             $this->data['controller_use'] = ($detail['type'] == 1) ? 'post' : 'product';
             $this->data['detail'] = $detail;
             if($this->input->post()){
@@ -285,7 +285,7 @@ class Templates extends Admin_Controller {
                     }
                     $reponse = array(
                         'csrf_hash' => $this->security->get_csrf_hash(),
-                        'detail' => $this->templates_model->get_by_id($id)['data']
+                        'detail' => $this->templates_model->get_by_id_templates($id)['data']
                     );
                     return $this->return_api(HTTP_SUCCESS,MESSAGE_UPDATE_SUCCESS,$reponse);
                 }else{
@@ -304,7 +304,7 @@ class Templates extends Admin_Controller {
             if($this->templates_model->find_rows(array('id' => $id,'is_deleted' => 0)) != 0){
                 $this->load->helper('form');
                 $this->load->library('form_validation');
-                $detail = $this->templates_model->get_by_id($id);
+                $detail = $this->templates_model->get_by_id_templates($id);
                 $this->data['detail'] = $detail;
                 $this->render('admin/templates/detail_templates_view');
             }else{
@@ -320,11 +320,20 @@ class Templates extends Admin_Controller {
     public function remove(){
         $id = $this->input->post('id');
         if($id &&  is_numeric($id) && ($id > 0)){
-            if($this->templates_model->find_rows(array('id' => $id,'is_deleted' => 0)) == 0){
-                return $this->output
-                    ->set_content_type('application/json')
-                    ->set_status_header(404)
-                    ->set_output(json_encode(array('status' => 404,'message' => MESSAGE_ISSET_ERROR)));
+            $template = $this->templates_model->find($id);
+            if(empty($template) || $template == 0){
+                return $this->return_api(HTTP_NOT_FOUND,MESSAGE_ISSET_ERROR);
+            }
+            if($template['type'] == 1){
+                $this->load->model('post_model');
+                $check_count = $this->post_model->get_where_array(array('templates_id' => $id));
+            }else{
+                $this->load->model('product_model');
+                $check_count = $this->product_model->get_where_array(array('templates_id' => $id));
+            }
+            if(count($check_count) > 0){
+                $title = ($template['type'] == 1) ? ' bài viết' : ' sản phẩm';
+                return $this->return_api(HTTP_NOT_FOUND,sprintf(MESSAGE_ERROR_REMOVE_CONFIG, count($check_count).$title));
             }
             $data = array('is_deleted' => 1);
             $update = $this->templates_model->common_update($id, $data);

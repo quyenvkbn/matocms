@@ -173,16 +173,16 @@
                                                                                             <input type="text" name="title_<?php echo $key;?>[]" value="<?php echo $title[$key][$i-1];?>" placeholder="" readonly onfocus="onfocus_text(this)" onblur="listener(this)" class="form-control title" >
                                                                                             <span class="help-block hidden">Bạn cần nhập trường này</span>
                                                                                         </div>
-                                                                                        <?php if ($i == 3): ?>
-                                                                                            <div class="col-xs-12 show_textarea" style="padding:0px;">
+                                                                                        <div class="col-xs-12 show_textarea" style="padding:0px;">
+                                                                                            <?php if ($i == 3): ?>
                                                                                                 <div class="importValue">
                                                                                                     <label for="">Nhập danh sách lựa chọn cho kiểu select các lựa chọn cách nhau bởi ba dấu ;;; </label>
                                                                                                     <div class="col-xs-12" style="padding:0px;">
                                                                                                         <textarea type="text" name="number_list_<?php echo $key; ?>[]" class="col-xs-12"  onfocus="onfocus_text(this)" onblur="listener(this)" placeholder="" readonly id="number_list_<?php echo $key.$i; ?>" rows="5"></textarea>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                        <?php endif ?>
+                                                                                            <?php endif ?>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

@@ -195,6 +195,7 @@ defined('MESSAGE_ERROR_MAIN_SELECTED') OR define('MESSAGE_ERROR_MAIN_SELECTED', 
 defined('MESSAGE_ERROR_REMOVE') OR define('MESSAGE_ERROR_REMOVE', 'Bạn có %u menu là dạng menu trỏ trực tiếp đến bài viết hiện tại nên bạn không thể xóa.');
 defined('MESSAGE_ERROR_REMOVE_CATEGORY') OR define('MESSAGE_ERROR_REMOVE_CATEGORY', 'Bạn có %u menu chọn danh mục hiện tại là menu chính nên bạn không thể xóa.');
 defined('MESSAGE_FOREIGN_KEY_LINK_ERROR') OR define('MESSAGE_FOREIGN_KEY_LINK_ERROR', 'Category vẫn còn %s bài viết và có %s category là con nên không thẻ xóa!');
+defined('MESSAGE_ERROR_REMOVE_CONFIG') OR define('MESSAGE_ERROR_REMOVE_CONFIG', 'Bạn không thể xóa cấu hình vì có %s sử dụng cấu hình!');
 
 /**
  * Message 

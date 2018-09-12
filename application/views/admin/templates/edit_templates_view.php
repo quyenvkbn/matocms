@@ -165,16 +165,16 @@
                                                                                             <input type="text" name="title_<?php echo $k;?>[]" placeholder="" value="<?php echo $value['title'][$k]; ?>"  onfocus="onfocus_text(this)" onblur="listener(this)" <?php echo ($i <= 6) ? 'readonly' : '';?> class="form-control title" >
                                                                                             <span class="help-block hidden">Bạn cần nhập trường này</span>
                                                                                         </div>
-                                                                                        <?php if (in_array($value['type'],$type)): ?>
-                                                                                            <div class="col-xs-12 show_textarea" style="padding:0px;">
+                                                                                        <div class="col-xs-12 show_textarea" style="padding:0px;">
+                                                                                            <?php if (in_array($value['type'],$type)): ?>
                                                                                                 <div class="importValue">
                                                                                                     <label for="">Nhập danh sách lựa chọn cho kiểu <?php echo $value['type']?> các lựa chọn cách nhau bởi ba dấu ;;; </label>
                                                                                                     <div class="col-xs-12" style="padding:0px;">
                                                                                                         <textarea type="text" name="number_list_<?php echo $k; ?>[]" class="col-xs-12"  onfocus="onfocus_text(this)" onblur="listener(this)" placeholder="" <?php echo ($key == 'parent_id_shared') ? 'readonly' : '' ;?> id="number_list_<?php echo $k.$i; ?>" rows="5"><?php echo implode(';;;',$value['choice'][$k]);?></textarea>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                        <?php endif ?>
+                                                                                            <?php endif ?>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

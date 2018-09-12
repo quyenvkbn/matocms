@@ -33,21 +33,13 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-12" style="margin-top: 5px;">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label style="width: 100px">Tên cấu hình: </label>
                                     <span><?php echo $detail['title'] ?></span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label style="width: 100px">Sử dụng cho: </label>
                                     <span><?php echo ($detail['type'] == 1)? 'Post' : 'Product';?></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label style="width: 100px">Status: </label>
-                                    <?php if ($detail['is_activated'] == 1): ?>
-                                        <a class="btn btn-success btn-xs" title="Cấu hình đang bật">Đang  sử dụng </a>
-                                    <?php else: ?>
-                                        <a class="btn btn-warning btn-xs" title="Cấu hình không sử dụng">Không sử dụng</a>
-                                    <?php endif ?>
                                 </div>
                             </div>
 

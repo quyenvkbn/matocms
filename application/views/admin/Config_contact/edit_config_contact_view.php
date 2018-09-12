@@ -155,16 +155,16 @@
                                                                                        </div>
                                                                                     <?php endif ?>
                                                                                 </div>
-                                                                                <?php if(in_array($value['type'],$type)): ?>
-                                                                                    <div class="col-xs-12 show_textarea" style="padding:0px;">
+                                                                                <div class="col-xs-12 show_textarea" style="padding:0px;">
+                                                                                    <?php if(in_array($value['type'],$type)): ?>
                                                                                         <div class="importValue">
                                                                                             <label for="">Nhập danh sách lựa chọn cho kiểu <?php echo $value['type'];?> các lựa chọn cách nhau bởi ba dấu ;;; </label>
                                                                                             <div class="col-xs-12" style="padding:0px;">
                                                                                                 <textarea type="text" name="number_list_<?php echo $k;?>[]" class="col-xs-12"  onfocus="onfocus_text(this)" onblur="listener(this)" placeholder="" id="number_list_<?php echo $k.$count; ?>" rows="5"><?php echo implode(';;;',$value['choice'][$k]);?></textarea>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                <?php endif; ?>
+                                                                                    <?php endif; ?>
+                                                                                </div>
                                                                             </div>
                                                                             <?php $h--; ?>
                                                                         <?php endforeach ?>
