@@ -112,13 +112,6 @@ class Menu_model extends MY_Model {
         $this->db->order_by($this->table .".sort", $order);
         return $this->db->get()->result_array();
     }
-    public function get_where_array($array){
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('is_deleted',0);
-        $this->db->where($array);
-        return $result = $this->db->get()->result_array();
-    }
     public function get_row_where_array($array){
         $this->db->select('*');
         $this->db->from($this->table);

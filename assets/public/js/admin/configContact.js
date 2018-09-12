@@ -81,7 +81,7 @@ function addField(number){
                                         <input type="text" name="description_${key}[]" value="" placeholder="" onfocus="onfocus_text(this)" onblur="listener(this)" class="form-control description">
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-xs-12 required_field"></div>
+                                <div class="col-xs-12 required_field" style="padding:0px;"></div> 
                                 <div class="col-xs-12 show_textarea" style="padding:0px;"></div>
                             </div>
                         </div>

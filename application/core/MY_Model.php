@@ -279,4 +279,11 @@ class MY_Model extends CI_Model {
         $this->db->where(array('id' => $id,'is_deleted' => 0));
         return $this->db->get($this->table)->row_array();
     }
+    public function get_where_array($array){
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('is_deleted',0);
+        $this->db->where($array);
+        return $result = $this->db->get()->result_array();
+    }
 }
