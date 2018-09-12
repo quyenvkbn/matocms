@@ -10,6 +10,7 @@ class Testcontact extends Public_Controller {
         $this->load->helper('email');
         $this->load->library('session');
         $this->data['lang'] = $this->session->userdata('langAbbreviation');
+        // $this->data['lang'] ='en';
         $this->load->model('config_contact_model');
         $this->data['controller'] = $this->config_contact_model->table;
     }
@@ -29,8 +30,8 @@ class Testcontact extends Public_Controller {
     	if($this->input->post()){
 	    	if($this->config_contact_model->find_rows(array('is_deleted' => 0, 'is_activated' => 1)) != 0){
 		        $this->data['detail'] = $this->config_contact_model->get_by_activated_contact();
-		        $body_mail = json_decode($this->data['detail']['config_send_mail'],true)['body'];
-		        $description_mail = json_decode($this->data['detail']['config_send_mail'],true)['description_email'];
+		        $body_mail = json_decode($this->data['detail']['config_send_mail'],true)['body'][$this->data['lang']];
+		        $description_mail = json_decode($this->data['detail']['config_send_mail'],true)['description_email'][$this->data['lang']];
 		        $cc_mail = explode(',',json_decode($this->data['detail']['config_send_mail'],true)['cc_email']);
 		        $to_mail = json_decode($this->data['detail']['config_send_mail'],true)['to_email'];
 		        foreach ($this->input->post() as $key => $value) {

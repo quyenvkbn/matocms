@@ -1,4 +1,28 @@
-
+<style type="text/css">
+    @media only screen and (max-width: 768px) {
+        .check_multiple{
+            margin-top: 0px;
+        }
+    }
+    @media only screen and (min-width: 768px) {
+        .check_multiple{
+            margin-top: 25px;
+        }
+    }
+    .drop-drag div.btn >span:before {
+        font-family: "Glyphicons Halflings";
+        content: "\e114";
+        float: left;
+        margin-top: -1px;
+        font-size: 1.3em;transition: .3s;
+    }
+    /* Icon when the collapsible content is hidden */
+    .drop-drag div.btn >span.collapsed:before {
+    content: "\e080";
+    font-size: 1.3em;
+    margin-top: -1px;transition: .3s;
+    }
+</style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -10,6 +34,7 @@
         </h1>
     </section>
     <input type="text" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash() ?>" placeholder="" class="form-control hidden" id="csrf_sitecom_token">
+    <input type="text" name="page_languages" value='<?php echo json_encode($page_languages); ?>' placeholder="" class="form-control hidden" id="page_languages">
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -66,16 +91,6 @@
                                         <div class="col-xs-12">
                                             <div class="col-xs-12 required" id="parent_to_mail" style="padding: 0px;">
                                                 <?php 
-                                                    echo form_label('Mô tả Email', 'description_email'); 
-                                                    echo form_error('description_email');
-                                                    echo form_input('description_email', set_value('description_email'), ' class="form-control" id="description_email" placeholder="Nhập mô tả email" ');
-                                                ?>
-                                                <span class="help-block hidden">Bạn cần nhập trường này</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12">
-                                            <div class="col-xs-12 required" id="parent_to_mail" style="padding: 0px;">
-                                                <?php 
                                                     echo form_label('To Email (Chỉ được nhập 1 mail)', 'to_email'); 
                                                     echo form_error('to_email');
                                                     echo form_input('to_email', set_value('to_email'), ' class="form-control" id="to_email" placeholder="VD: admin@gmail.com" ');
@@ -92,11 +107,39 @@
                                                 ?>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12" id="add-content-body" style="padding-top: 10px;">
-                                            
-                                        </div>
                                         <div class="col-xs-12">
-                                            <textarea name="" class="tinymce-area" id="content_body" name="content_body" ></textarea>
+                                            <ul class="nav nav-pills nav-justified" role="tablist" style="padding-top: 10px;">
+                                                <?php $i = 0; ?>
+                                                <?php foreach ($page_languages as $key => $value): ?>
+                                                    <li role="presentation" class="<?php echo ($i == 0)? 'active' : '' ?>">
+                                                        <a href="#<?php echo $key ?>" aria-controls="<?php echo $key ?>" role="tab" data-toggle="tab">
+                                                            <span class="badge"><?php echo $i + 1 ?></span> <?php echo $value ?>
+                                                        </a>
+                                                    </li>
+                                                <?php $i++; ?>
+                                                <?php endforeach ?>
+                                            </ul>
+                                            <div class="tab-content">
+                                                <?php $i = 0; ?>
+                                                <?php foreach ($page_languages as $key => $value): ?>
+                                                    <div role="tabpanel" class="tab-pane fade <?php echo ($i == 0)? 'active in' : '' ?>" id="<?php echo $key ?>">
+                                                        <div class="col-xs-12 required" id="parent_to_mail" style="margin-bottom: 10px;padding: 0px;">
+                                                            <?php 
+                                                                echo form_label('Mô tả Email', 'description_email_'.$key); 
+                                                                echo form_error('description_email_'.$key);
+                                                                echo form_input('description_email_'.$key, set_value('description_email'), ' class="form-control" id="description_email_'.$key.'" placeholder="Nhập mô tả email" ');
+                                                            ?>
+                                                            <span class="help-block hidden">Bạn cần nhập trường này</span>
+                                                        </div>
+                                                        <div class="col-xs-12 add-content-body" style="padding: 0px;">
+                                                            
+                                                        </div>
+                                                        <div class="col-xs-12" style="padding: 0px;">
+                                                            <textarea name="" class="tinymce-area" id="content_body_<?php echo $key; ?>" name="content_body_<?php echo $key; ?>" ></textarea>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -107,27 +150,17 @@
                                 <div class="col-xs-12 nav-product" style="">
                                     <ul class="nav nav-tabs" role="tablist" id="nav-product">
                                         <li><button class="btn btn-primary" id="go-back" onclick="history.back(-1);" >Go back</button></li>
-                                        <li role="presentation" id="content-home" class="active" style="float: right;"><button href="#config_send_mail" class="btn btn-primary" aria-controls="config_send_mail" role="tab" data-toggle="tab" onmouseup="check_validate(this)" onclick="by_slug_tinymce(this)">Cấu hình send mail</button></li>
+                                        <li role="presentation" id="content-home" class="active" style="float: right;"><button href="#config_send_mail" class="btn btn-primary" aria-controls="config_send_mail" role="tab" data-toggle="tab" onclick="check_validate(this)">Cấu hình send mail</button></li>
                                     </ul>
                                 </div>
                                 <div class="col-xs-12 nav-product" style="display: none">
                                     <ul class="nav nav-tabs" role="tablist" id="nav-product">
-                                        <li role="presentation" id="config_contacts"><button href="#config_contact" class="btn btn-primary" aria-controls="config_contact" role="tab" data-toggle="tab" onclick="check_validate(this)" onmouseup="by_slug_after(this)">Cấu hình Form</button></li>
+                                        <li role="presentation" id="config_contacts"><button href="#config_contact" class="btn btn-primary" aria-controls="config_contact" role="tab" data-toggle="tab" onclick="check_validate(this)">Cấu hình Form</button></li>
                                         <span type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary" onclick="view_form(this)" style="float: right;">Xem Form</span>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-
-
-                        <!-- <div class="col-xs-12" style="margin-top:10px;">
-                            <span type="button" data-toggle="modal" data-target="#myModals" class="btn btn-primary" onclick="view_form(this)">Go Back</span>
-                            <span type="button" data-toggle="modal" data-target="#myModals" class="btn btn-primary" onclick="view_form(this)" style="float: right;">Cấu hình send mail</span>
-                        </div>
-                        <div class="col-xs-12" style="margin-top:10px;">
-                            <span type="button" data-toggle="modal" data-target="#myModals" class="btn btn-primary" onclick="view_form(this)">Cấu hình Form</span>
-                            <span type="button" data-toggle="modal" data-target="#myModals" class="btn btn-primary" onclick="view_form(this)" style="float: right;">Xem Form</span>
-                        </div> -->
                         <?php echo form_close(); ?>
                     </div>
                 </div>

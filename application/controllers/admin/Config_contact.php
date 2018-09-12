@@ -30,32 +30,58 @@ class Config_contact extends Admin_Controller {
             if($this->input->post('name_configuration') == ''){
                 return $this->return_api(HTTP_NOT_FOUND,MESSAGE_CREATE_ERROR_VALIDATE);
             }
-            for ($i=0; $i < count($this->input->post('title')); $i++) { 
-                if($this->input->post('title')[$i] == ''){
-                    return $this->return_api(HTTP_NOT_FOUND,MESSAGE_CREATE_ERROR_VALIDATE);
+            foreach ($this->page_languages as $key => $value) {
+                for ($i=0; $i < count($this->input->post('title_vi')); $i++) { 
+                    if($this->input->post('title_'.$value)[$i] == ''){
+                        return $this->return_api(HTTP_NOT_FOUND,MESSAGE_CREATE_ERROR_VALIDATE);
+                    }
                 }
             }
             $insert = array();
             $count = 0;
             $required = 0;
             $multiple = 0;
-            for ($i=0; $i < count($this->input->post('title')); $i++) {
+            for ($i=0; $i < count($this->input->post('required_check')); $i++) {
                 $arr = array(
-                    'title' => $this->input->post('title')[$i],
-                    'description' => $this->input->post('description')[$i],
                     'type' => $this->input->post('type')[$i],
                 );
+                $lang_title = array();
+                $lang_description = array();
+                foreach ($this->page_languages as $key => $value) {
+                    $lang_title[$value] = $this->input->post('title_'.$value)[$i];
+                    $lang_description[$value] = $this->input->post('description_'.$value)[$i];
+                }
+                $arr = array_merge($arr, array('title' => $lang_title, 'description' => $lang_description));
                 if($this->input->post('type')[$i] == 'radio' || $this->input->post('type')[$i] == 'checkbox' || $this->input->post('type')[$i] == 'select'){
-                    $arr = array_merge($arr, array('choice' => explode(';;;', $this->input->post('number_list')[$count])));
+                    $lang_textarea = array();
+                    $check_number_list = 0;
+                    foreach ($this->page_languages as $key => $value) {
+                        $lang_textarea[$value] = explode(';;;', $this->input->post('number_list_'.$value)[$count]);
+                        if($check_number_list != 0){
+                            if($check_number_list != count($lang_textarea[$value])){
+                                $reponse = array(
+                                    'csrf_hash' => $this->security->get_csrf_hash(),
+                                );
+                                return $this->return_api(HTTP_NOT_FOUND,MESSAGE_CREATE_CONFIG_ERROR,$reponse);
+                            }
+                        }
+                        $check_number_list = count($lang_textarea[$value]);
+                    }
+                    $arr = array_merge($arr, array('choice' => $lang_textarea));
                     $count++;
                 }
                 if($this->input->post('required_check')[$i] == 'true'){
-                    $arr = array_merge($arr, array('required' => $this->input->post('required_content')[$required]));
+                    $lang_required = array();
+                    foreach ($this->page_languages as $key => $value) {
+                        
+                        $lang_required[$value] = $this->input->post('required_content_'.$value)[$required];
+                    }
+                    $arr = array_merge($arr, array('required' => $lang_required));
                     $required++;
                 }
                 if($this->input->post('type')[$i] == 'select'){
-                    if($this->input->post('select_multiple')[$multiple] == 'true'){
-                        $arr = array_merge($arr, array('select_multiple' => $this->input->post('select_multiple')[$multiple]));
+                    if($this->input->post('check_multiple')[$multiple] == 'true'){
+                        $arr = array_merge($arr, array('check_multiple' => $this->input->post('check_multiple')[$multiple]));
                     }
                     $multiple++;
                 }
@@ -94,32 +120,58 @@ class Config_contact extends Admin_Controller {
                 if($this->input->post('name_configuration') == ''){
                     return $this->return_api(HTTP_NOT_FOUND,MESSAGE_UPDATE_ERROR_VALIDATE);
                 }
-                for ($i=0; $i < count($this->input->post('title')); $i++) { 
-                    if($this->input->post('title')[$i] == ''){
-                        return $this->return_api(HTTP_NOT_FOUND,MESSAGE_UPDATE_ERROR_VALIDATE);
+                foreach ($this->page_languages as $key => $value) {
+                    for ($i=0; $i < count($this->input->post('title_vi')); $i++) { 
+                        if($this->input->post('title_'.$value)[$i] == ''){
+                            return $this->return_api(HTTP_NOT_FOUND,MESSAGE_CREATE_ERROR_VALIDATE);
+                        }
                     }
                 }
                 $update = array();
                 $count = 0;
                 $required = 0;
                 $multiple = 0;
-                for ($i=0; $i < count($this->input->post('title')); $i++) {
+                for ($i=0; $i < count($this->input->post('required_check')); $i++) {
                     $arr = array(
-                        'title' => $this->input->post('title')[$i],
-                        'description' => $this->input->post('description')[$i],
                         'type' => $this->input->post('type')[$i],
                     );
+                    $lang_title = array();
+                    $lang_description = array();
+                    foreach ($this->page_languages as $key => $value) {
+                        $lang_title[$value] = $this->input->post('title_'.$value)[$i];
+                        $lang_description[$value] = $this->input->post('description_'.$value)[$i];
+                    }
+                    $arr = array_merge($arr, array('title' => $lang_title, 'description' => $lang_description));
                     if($this->input->post('type')[$i] == 'radio' || $this->input->post('type')[$i] == 'checkbox' || $this->input->post('type')[$i] == 'select'){
-                        $arr = array_merge($arr, array('choice' => explode(';;;', $this->input->post('number_list')[$count])));
+                        $lang_textarea = array();
+                        $check_number_list = 0;
+                        foreach ($this->page_languages as $key => $value) {
+                            $lang_textarea[$value] = explode(';;;', $this->input->post('number_list_'.$value)[$count]);
+                            if($check_number_list != 0){
+                                if($check_number_list != count($lang_textarea[$value])){
+                                    $reponse = array(
+                                        'csrf_hash' => $this->security->get_csrf_hash(),
+                                    );
+                                    return $this->return_api(HTTP_NOT_FOUND,MESSAGE_CREATE_CONFIG_ERROR,$reponse);
+                                }
+                            }
+                            $check_number_list = count($lang_textarea[$value]);
+                        }
+                        $arr = array_merge($arr, array('choice' => $lang_textarea));
                         $count++;
                     }
                     if($this->input->post('required_check')[$i] == 'true'){
-                        $arr = array_merge($arr, array('required' => $this->input->post('required_content')[$required]));
+                        $lang_required = array();
+                        foreach ($this->page_languages as $key => $value) {
+                            
+                            $lang_required[$value] = $this->input->post('required_content_'.$value)[$required];
+                        }
+                        $arr = array_merge($arr, array('required' => $lang_required));
                         $required++;
                     }
                     if($this->input->post('type')[$i] == 'select'){
-                        if($this->input->post('select_multiple')[$multiple] == 'true'){
-                            $arr = array_merge($arr, array('select_multiple' => $this->input->post('select_multiple')[$multiple]));
+                        if($this->input->post('check_multiple')[$multiple] == 'true'){
+                            $arr = array_merge($arr, array('check_multiple' => $this->input->post('check_multiple')[$multiple]));
                         }
                         $multiple++;
                     }

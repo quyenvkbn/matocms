@@ -17,7 +17,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <!-- test contact -->
     <!-- <link rel="stylesheet" href="<?php echo site_url('assets/public/lib/') ?>bootstrap/css/bootstrap.min.css"> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="<?php echo site_url('assets/public/lib/') ?>bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo site_url('assets/public/lib/') ?>fontAwesome/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="<?php echo site_url('assets/public/lib/') ?>ionicons/css/ionicons.min.css">

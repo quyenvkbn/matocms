@@ -46,22 +46,16 @@
                         <?php foreach ($template as $key => $value): ?>
                             <div role="tabpanel" class="form-group tab-pane <?php echo ($i == 0)? 'active' : '' ?>" id="<?php echo $key ?>">
                                 <?php foreach ($value as $k => $val): ?>
+                                    
                                         <?php
                                         if($k == 'title' && in_array($k, $request_language_template)){
+                                            echo '<div class="form-group col-xs-12 required" >';
                                             echo form_label($val, $k .'_'. $key);
-                                            echo form_error($k .'_'. $key);
-                                            echo form_input($k .'_'. $key, set_value($k .'_'. $key), 'class="form-control" id="title_'.$key.'"');
+                                            echo form_input($k .'_'. $key, set_value($k .'_'. $key), 'class="form-control title" id="title_'.$key.'"');
+                                            echo '<span class="help-block hidden">Bạn phải nhập tiêu đề cho menu.</span></div>';
                                         }
-                                        // elseif($k == 'description' && in_array($k, $request_language_template)){
-                                        //     echo form_label($val, $k .'_'. $key);
-                                        //     echo form_error($k .'_'. $key);
-                                        //     echo form_textarea($k .'_'. $key, set_value($k .'_'. $key, '', false), 'class="form-control" rows="5"');
-                                        // }elseif($k == 'content' && in_array($k, $request_language_template)){
-                                        //     echo form_label($val, $k .'_'. $key);
-                                        //     echo form_error($k .'_'. $key);
-                                        //     echo form_textarea($k .'_'. $key, set_value($k .'_'. $key, '', false), 'class="tinymce-area form-control" rows="5"');
-                                        // }
                                         ?>
+                                        
                                 <?php endforeach ?>
                             </div>
                             <?php $i++; ?>
@@ -119,7 +113,7 @@
                     <br>
                     <div class="form-group">
                         <?php
-                        echo form_submit('submit', 'OK', 'class="btn btn-primary" id="checkselected" style="float:right"');
+                        echo form_submit('submit', 'OK', 'class="btn btn-primary" id="checksubmit" style="float:right"');
                         echo form_close();
                         ?>
                         <a class="btn btn-primary cancel left" href="javascript:window.history.go(-1);">Go back</a>
@@ -197,10 +191,35 @@
         }
         document.getElementById('url').value = `${HOSTNAME}${value}`;
     }
-    // $("#checkselected").click(function(){
-    //     if($("#select_main").val() == ''){
-    //         alert("Bạn phải chọn menu chính");
-    //         return false;
-    //     }
-    // });
+    function check_validate(ev){
+        if(ev.querySelector('input').value == ''){
+            ev.closest('.required').classList.add("has-error");
+            ev.closest('.required').querySelector('span.help-block').classList.remove("hidden");
+        }else{
+            ev.closest('.required').querySelector('span.help-block').classList.add("hidden");
+            ev.closest('.required').classList.remove("has-error");
+        }
+    }
+    $("#checksubmit").click(function(){
+        for (var i = 0; i < document.querySelectorAll('.tab-content div.required').length; i++) {
+            if(document.querySelectorAll('.tab-content div.required')[i].querySelector('input').value == ''){
+                document.querySelectorAll('.tab-content div.required')[i].classList.add("has-error");
+                document.querySelectorAll('.tab-content div.required')[i].setAttribute('oninput',`check_validate(this)`);
+                document.querySelectorAll('.tab-content div.required')[i].querySelector('span').classList.remove("hidden");
+            }
+        }
+        if(document.querySelectorAll('.has-error').length > 0){
+            id_parent = document.querySelectorAll('.form-horizontal .has-error')[0].closest('.tab-pane').id;
+            document.querySelector(`.form-horizontal .nav.nav-justified li.active a`).setAttribute("aria-expanded","false");
+            document.querySelector(`.form-horizontal .nav.nav-justified li.active`).classList.remove("active");
+            document.querySelector(`.form-horizontal .tab-content .tab-pane.active`).setAttribute("class","form-group tab-pane fade");
+            document.querySelector(`.form-horizontal .has-error`).closest('.tab-pane').setAttribute("class","form-group tab-pane fade active in");
+            document.querySelector(`.form-horizontal a[href="#${id_parent}"]`).setAttribute("aria-expanded","true");
+            document.querySelector(`.form-horizontal a[href="#${id_parent}"]`).parentElement.classList.add("active");
+            document.querySelectorAll(`.form-horizontal .has-error input`)[0].focus();
+            
+            return false;
+        }
+        return false;
+    });
 </script>

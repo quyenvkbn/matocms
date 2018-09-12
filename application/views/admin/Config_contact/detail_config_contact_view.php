@@ -59,47 +59,67 @@
                                         <div role="tabpanel" class="tab-pane fade in active" id="view_form">
                                             <div class="box box-default">
                                                 <div class="box-body">
-                                                    <?php
-                                                        foreach (json_decode($detail['data'],true) as $key => $value) {
-                                                            switch ($value['type']) {
-                                                                case 'textarea':
-                                                                    echo '<div class="form-group col-xs-12"><label for="">' . $value['title'] . '</label>' . ($value['description'] ? ' (<i>' .  $value['description'] . '</i>)' : '') . '</br><textarea name="' . $key . '" value="" class="col-xs-12" rows="5"></textarea></div>';
-                                                                    break;
-                                                                
-                                                                case 'radio':
-                                                                    $radio = '';
-                                                                    foreach ($value['choice'] as $k => $val) {
-                                                                       $radio .= '<input type="radio" name="' . $key . '"/><span style="margin-right:10px;padding-left:5px;">' . $val . '</span>';
+                                                    <ul class="nav nav-pills nav-justified" role="tablist" style="margin-bottom: 10px;">
+                                                        <?php $h = 0; ?>
+                                                        <?php $count = 0; ?>
+                                                        <?php foreach ($page_languages as $k => $val): ?>
+                                                            <li role="presentation" class="<?php echo ($h == 0)? 'active' : '' ?>">
+                                                                <a href="#s<?php echo $k.$count ?>" aria-controls="<?php echo $k.$count ?>" role="tab" data-toggle="tab">
+                                                                    <span class="badge"><?php echo $h + 1 ?></span> Form <?php echo $val ?>
+                                                                </a>
+                                                            </li>
+                                                        <?php $h++; ?>
+                                                        <?php endforeach ?>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <?php foreach ($page_languages as $k => $val): ?>
+                                                            <div role="tabpanel" class="tab-pane fade <?php echo ($h == count($page_languages))? 'in active' : '' ?>" id="s<?php echo $k.$count ?>">
+                                                                <?php
+                                                                    foreach (json_decode($detail['data'],true) as $key => $value) {
+                                                                        switch ($value['type']) {
+                                                                            case 'textarea':
+                                                                                echo '<div class="form-group col-xs-12" style="padding:0px;"><label for="">' . $value['title'][$k] . '</label>' . ($value['description'][$k] ? ' (<i>' .  $value['description'][$k] . '</i>)' : '') . '</br><textarea name="' . $key . '" value="" class="col-xs-12" rows="5"></textarea></div>';
+                                                                                break;
+                                                                            
+                                                                            case 'radio':
+                                                                                $radio = '';
+                                                                                foreach ($value['choice'][$k] as $ks => $val) {
+                                                                                   $radio .= '<input type="radio" name="' . $key . '"/><span style="margin-right:10px;padding-left:5px;">' . $val . '</span>';
+                                                                                }
+                                                                                echo '<div class="form-group col-xs-12" style="padding:0px;"><label for="">' . $value['title'][$k] . '</label>' . ($value['description'][$k] ? ' (<i>' .  $value['description'][$k] . '</i>)' : '') . '</br>' . $radio .'</div>';
+                                                                                break;
+                                                                            
+                                                                            case 'checkbox':
+                                                                                $checkbox = '';
+                                                                                foreach ($value['choice'][$k] as $ks => $val) {
+                                                                                   $checkbox .= '<input type="checkbox" name="' . $key . '"/><span style="margin-right:10px;padding-left:5px;">' . $val . '</span>';
+                                                                                }
+                                                                                echo '<div class="form-group col-xs-12" style="padding:0px;"><label for="">' . $value['title'][$k] . '</label>' . ($value['description'][$k] ? ' (<i>' .  $value['description'][$k] . '</i>)' : '') . '</br>' . $checkbox .'</div>';
+                                                                                break;
+                                                                            
+                                                                            case 'select':
+                                                                                $select = '';
+                                                                                foreach ($value['choice'][$k] as $ks => $val) {
+                                                                                    $select .= '<option value="' . $val . '">' . $val . '</option>';
+                                                                                }
+                                                                                echo '<div class="form-group col-xs-12" style="padding:0px;"><label for="">' . $value['title'][$k] . '</label>' . ($value['description'][$k] ? ' (<i>' .  $value['description'][$k] . '</i>)' : '') . '<select name="" class="form-control" ' . (isset($value['select_multiple']) ? 'multiple' : '') . '>' . $select . '</select></div>';
+                                                                                break;
+                                                                            
+                                                                            case 'date':
+                                                                                echo '<div class="form-group col-xs-12" style="padding:0px;"><label for="">' . $value['title'][$k] . '</label><div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input class="form-control" name="date" placeholder="' .  $value['description'][$k] . '" id="realDPX-min" type="text"></div></div>';
+                                                                                break;
+                                                                            
+                                                                            default:
+                                                                                echo '<div class="form-group col-xs-12" style="padding:0px;"><label for="">' . $value['title'][$k] . '</label><input type="' . $value['type'] .'" class="form-control" placeholder="' .  $value['description'][$k] . '" /></div>';
+                                                                                break;
+                                                                        }
                                                                     }
-                                                                    echo '<div class="form-group col-xs-12"><label for="">' . $value['title'] . '</label>' . ($value['description'] ? ' (<i>' .  $value['description'] . '</i>)' : '') . '</br>' . $radio .'</div>';
-                                                                    break;
-                                                                
-                                                                case 'checkbox':
-                                                                    $checkbox = '';
-                                                                    foreach ($value['choice'] as $k => $val) {
-                                                                       $checkbox .= '<input type="checkbox" name="' . $key . '"/><span style="margin-right:10px;padding-left:5px;">' . $val . '</span>';
-                                                                    }
-                                                                    echo '<div class="form-group col-xs-12"><label for="">' . $value['title'] . '</label>' . ($value['description'] ? ' (<i>' .  $value['description'] . '</i>)' : '') . '</br>' . $checkbox .'</div>';
-                                                                    break;
-                                                                
-                                                                case 'select':
-                                                                    $select = '';
-                                                                    foreach ($value['choice'] as $k => $val) {
-                                                                        $select .= '<option value="' . $val . '">' . $val . '</option>';
-                                                                    }
-                                                                    echo '<div class="form-group col-xs-12"><label for="">' . $value['title'] . '</label>' . ($value['description'] ? ' (<i>' .  $value['description'] . '</i>)' : '') . '<select name="" class="form-control" ' . (isset($value['select_multiple']) ? 'multiple' : '') . '>' . $select . '</select></div>';
-                                                                    break;
-                                                                
-                                                                case 'date':
-                                                                    echo '<div class="form-group col-xs-12"><label for="">' . $value['title'] . '</label><div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input class="form-control" name="date" placeholder="' .  $value['description'] . '" id="realDPX-min" type="text"></div></div>';
-                                                                    break;
-                                                                
-                                                                default:
-                                                                    echo '<div class="form-group col-xs-12"><label for="">' . $value['title'] . '</label><input type="' . $value['type'] .'" class="form-control" placeholder="' .  $value['description'] . '" /></div>';
-                                                                    break;
-                                                            }
-                                                        }
-                                                    ?>
+                                                                ?>
+                                                            </div>
+                                                            <?php $h--; ?>
+                                                        <?php endforeach ?>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -115,8 +135,29 @@
                                                     </div>
                                                     <hr style="border: 1px solid gray">
                                                     <div class="col-xs-12" style="padding:0px;">
-                                                        <strong>Body mail</strong>
-                                                        <p><?php echo $body['body']; ?></p>
+                                                        <ul class="nav nav-pills nav-justified" role="tablist" style="margin-bottom: 10px;">
+                                                            <?php $h = 0; ?>
+                                                            <?php $count = 0; ?>
+                                                            <?php foreach ($page_languages as $k => $val): ?>
+                                                                <li role="presentation" class="<?php echo ($h == 0)? 'active' : '' ?>">
+                                                                    <a href="#<?php echo $k.$count ?>" aria-controls="<?php echo $k.$count ?>" role="tab" data-toggle="tab">
+                                                                        <span class="badge"><?php echo $h + 1 ?></span> Body and Description (<?php echo $val ?>)
+                                                                    </a>
+                                                                </li>
+                                                            <?php $h++; ?>
+                                                            <?php endforeach ?>
+                                                        </ul>
+                                                        <div class="tab-content">
+                                                            <?php foreach ($page_languages as $k => $val): ?>
+                                                                <div role="tabpanel" class="tab-pane fade <?php echo ($h == count($page_languages))? 'in active' : '' ?>" id="<?php echo $k.$count ?>">
+                                                                    <strong>Description Email: </strong><span><?php echo $body['description_email'][$k]; ?></span>
+                                                                    <p><strong>Body mail: </strong></p>
+                                                                    <p><?php echo $body['body'][$k]; ?></p>
+                                                                </div>
+                                                            <?php $h--; ?>
+                                                            <?php endforeach ?>
+                                                        </div>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>

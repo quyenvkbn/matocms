@@ -93,7 +93,7 @@
                                                     <div class="col-xs-12 drop-drag" draggable="<?php echo ($i <= 6)? 'false' : 'true'; ?>" ondragstart="drag(event)">
                                                         <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;text-align: left;">
                                                             <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-10 check-collapse collapsed" style="height:35px;padding-top:2px" aria-expanded="false">
-                                                                <span style="padding-left:10px;font-weight: 500;font-size: 1.2em;"><?php echo $i;?></span> <b style="font-size: 1.1em;font-weight: 500;">. <?php echo $value['title']['vi']; ?> </b>
+                                                                <span style="padding-left:10px;font-weight: 500;font-size: 1.2em;"><?php echo $i;?></span> <b style="font-size: 1.18em;font-weight: 500;">. <?php echo $value['title']['vi']; ?> </b>
                                                             </span>
                                                             <i style="float: right;padding-right:5px;font-size:1.8em;<?php echo ($i <= 6) ? 'display: none;' : '';?>" class="fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
                                                         </div>
