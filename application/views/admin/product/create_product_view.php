@@ -338,18 +338,18 @@
 
     }
     function check_validate(ev,type){
-        compare = '';
-        if(type == 'file' || type == 'text'){
-            value = ev.querySelectorAll('input').length;
+        if(type == 'text'){
+            value = (ev.querySelector('input').value == '') ? true : false;
         }else if(type == 'radio' || type == 'checkbox'){
-            value = ev.querySelectorAll('input:checked').length;
-            compare = 0;
+            value = (ev.querySelectorAll('input:checked').length == 0) ? true : false;
         }else if(type == 'date'){
-            value = ev.value;
+            value = (ev.value == '') ? true : false;
+        }else if(type == 'file'){
+            value = (ev.querySelectorAll('input').files.length == 0 && ev.previousElementSibling.querySelector('.no_image') != null) ? true : false;
         }else{
-            value = ev.querySelector(type).value;
+            value = (ev.querySelector(type).value) ? true : false;
         }
-        if(value == compare){
+        if(value){
             ev.closest('.required').classList.add("has-error");
             ev.closest('.required').querySelector('span.help-block').classList.remove("hidden");
         }else{

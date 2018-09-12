@@ -1,48 +1,51 @@
+
+    
+    
 <section class="content news container">
-    <input type="text" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash() ?>" placeholder="" class="form-control hidden" id="csrf_sitecom_token">
+    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash() ?>" placeholder="" class="form-control hidden" id="csrf_sitecom_token">
     <?php
         echo form_open_multipart('', array('class' => 'form-contact','onsubmit' => 'return false'));
     ?>
 	<?php
         foreach (json_decode($detail['data'],true) as $key => $value) {
-            $required = isset($value['required']) ? 'required' : '';
-            $content_red = isset($value['required']) ? '<span class="help-block hidden" style="margin-bottom:0px;">' . $value['required'] . '</span>' : '';
+            $required = isset($value['required'][$lang]) ? 'required' : '';
+            $content_red = isset($value['required'][$lang]) ? '<span class="help-block hidden" style="margin-bottom:0px;">' . $value['required'][$lang] . '</span>' : '';
             switch ($value['type']) {
                 case 'textarea':
-                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'] . '</label>' . ($value['description'] ? ' (<i>' .  $value['description'] . '</i>)' : '') . '</br><textarea name="' . $key . '" value="" class="form-control col-xs-12" rows="5"></textarea>' . $content_red . '</div>';
+                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'][$lang] . '</label>' . ($value['description'][$lang] ? ' (<i>' .  $value['description'][$lang] . '</i>)' : '') . '</br><textarea name="' . $key . '" value="" class="form-control col-xs-12" rows="5"></textarea>' . $content_red . '</div>';
                     break;
                 
                 case 'radio':
                     $radio = '';
-                    foreach ($value['choice'] as $k => $val) {
+                    foreach ($value['choice'][$lang] as $k => $val) {
                         $checked = ($k == 0) ? 'checked' : '';
                         $radio .= '<label class="radio-inline"><input type="radio" name="' . $key . '" value="' . $val . '" >' . $val . '</label>';
                     }
-                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'] . '</label>' . ($value['description'] ? ' (<i>' .  $value['description'] . '</i>)' : '') . '</br>' . $radio .'</br>' . $content_red . '</div>';
+                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'][$lang] . '</label>' . ($value['description'][$lang] ? ' (<i>' .  $value['description'][$lang] . '</i>)' : '') . '</br>' . $radio .'</br>' . $content_red . '</div>';
                     break;
                 
                 case 'checkbox':
                     $checkbox = '';
-                    foreach ($value['choice'] as $k => $val) {
+                    foreach ($value['choice'][$lang] as $k => $val) {
                        $checkbox .= '<label class="checkbox-inline"><input type="checkbox" name="' . $key . '[]" value="' . $val . '" >' . $val . '</label>';
                     }
-                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'] . '</label>' . ($value['description'] ? ' (<i>' .  $value['description'] . '</i>)' : '') . '</br>' . $checkbox .'</br>' . $content_red . '</div>';
+                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'][$lang] . '</label>' . ($value['description'][$lang] ? ' (<i>' .  $value['description'][$lang] . '</i>)' : '') . '</br>' . $checkbox .'</br>' . $content_red . '</div>';
                     break;
                 
                 case 'select':
                     $select = '';
-                    foreach ($value['choice'] as $k => $val) {
+                    foreach ($value['choice'][$lang] as $k => $val) {
                         $select .= '<option value="' . $val . '">' . $val . '</option>';
                     }
-                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'] . '</label>' . ($value['description'] ? ' (<i>' .  $value['description'] . '</i>)' : '') . '<select name="' . $key . '"  class="form-control" ' . (isset($value['select_multiple']) ? 'multiple' : '') . '>' . $select . '</select>' . $content_red . '</div>';
+                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'][$lang] . '</label>' . ($value['description'][$lang] ? ' (<i>' .  $value['description'][$lang] . '</i>)' : '') . '<select name="' . $key . '"  class="form-control" ' . (isset($value['select_multiple']) ? 'multiple' : '') . '>' . $select . '</select>' . $content_red . '</div>';
                     break;
                 
                 case 'date':
-                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'] . '</label><div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input class="form-control" name="' . $key . '" placeholder="' .  $value['description'] . '" id="realDPX-min" type="text"></div>' . $content_red . '</div>';
+                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'][$lang] . '</label><div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input class="form-control" name="' . $key . '" placeholder="' .  $value['description'][$lang] . '" id="realDPX-min" type="text"></div>' . $content_red . '</div>';
                     break;
                 
                 default:
-                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'] . '</label><input type="' . $value['type'] .'" name="' . $key . '" class="form-control" placeholder="' .  $value['description'] . '" />' . $content_red . '</div>';
+                    echo '<div class="form-group col-xs-12 ' . $required . '" id="parent_' . $key . '"><label for="' . $value['type'] . '">' . $value['title'][$lang] . '</label><input type="' . $value['type'] .'" name="' . $key . '" class="form-control" placeholder="' .  $value['description'][$lang] . '" />' . $content_red . '</div>';
                     break;
             }
         }
