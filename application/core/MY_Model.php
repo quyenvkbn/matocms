@@ -150,6 +150,12 @@ class MY_Model extends CI_Model {
         return $this->db->update($this->table, $data);
     }
 
+    public function common_delete($id) {
+        $this->db->where('id', $id);
+        
+        return $this->db->delete($this->table);
+    }
+
     public function common_update_multiple($data) {
         return $this->db->update_batch($this->table, $data,'id');
     }

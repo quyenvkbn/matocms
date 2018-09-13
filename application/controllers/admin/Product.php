@@ -48,7 +48,7 @@ class Product extends Admin_Controller{
         if($id_template &&  is_numeric($id_template) && ($id_template > 0)){
     		$this->load->helper('form');
             if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $id_template, 'type' => '2')) != 0){
-                $this->data['detail'] = $this->templates_model->get_by_id($id_template);
+                $this->data['detail'] = $this->templates_model->get_by_id_templates($id_template);
             }else{
                 $this->session->set_flashdata('message_error',MESSAGE_ISSET_CONFIG_ERROR);
                 redirect('admin/'. $this->data['controller'] .'', 'refresh');
@@ -105,7 +105,7 @@ class Product extends Admin_Controller{
                 $this->load->helper('form');
                 $this->load->library('form_validation');
                 $detail = $this->product_model->get_by_id($id, array('title', 'description', 'content','data_lang'));
-                $templates = $this->templates_model->get_by_id($detail['templates_id']);
+                $templates = $this->templates_model->get_by_id_templates($detail['templates_id']);
                 $detail = build_language($this->data['controller'], $detail, array('title', 'description', 'content','data_lang'), $this->page_languages);
                 $parent_title = $this->build_parent_title($detail['product_category_id']);
                 $detail['parent_title'] = $parent_title;
@@ -127,6 +127,7 @@ class Product extends Admin_Controller{
         $id = $this->input->post('id');
         if($id &&  is_numeric($id) && ($id > 0)){
             $product = $this->product_model->find($id);
+            $templates = array_slice(json_decode($this->templates_model->find($product['templates_id'])['data'],true), 6);
             if($this->product_model->find_rows(array('id' => $id,'is_deleted' => 0)) == 0){
                 return $this->return_api(HTTP_NOT_FOUND,MESSAGE_ISSET_ERROR,$reponse);
             }
@@ -135,12 +136,21 @@ class Product extends Admin_Controller{
             if(count($menu_model) > 0){
                 return $this->return_api(HTTP_NOT_FOUND,sprintf(MESSAGE_ERROR_REMOVE, count($menu_model)));
             }
-            $data = array('is_deleted' => 1);
-            $update = $this->product_model->common_update($id, $data);
-            if($update){
+
+
+            
+            $delete = $this->product_model->common_delete($id);//chưa xong
+
+
+            
+            if($delete){
                 $reponse = array(
                     'csrf_hash' => $this->security->get_csrf_hash()
                 );
+                array_map('unlink', glob('./assets/upload/product/'.$product['slug'].'/thumb/*.*'));
+                array_map('unlink', glob('./assets/upload/product/'.$product['slug'].'/*.*'));
+                rmdir('./assets/upload/product/'.$product['slug'].'/thumb');
+                rmdir('./assets/upload/product/'.$product['slug']);
                 return $this->return_api(HTTP_SUCCESS,MESSAGE_REMOVE_SUCCESS,$reponse);
             }
             return $this->return_api(HTTP_NOT_FOUND,MESSAGE_REMOVE_ERROR);
@@ -160,7 +170,7 @@ class Product extends Admin_Controller{
             $this->data['templates'] = array();
             $this->data['templates_all'] = array();
             if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $detail['templates_id'])) != 0){
-                $this->data['templates_all'] = json_decode($this->templates_model->get_by_id($detail['templates_id'])['data'],true);
+                $this->data['templates_all'] = json_decode($this->templates_model->get_by_id_templates($detail['templates_id'])['data'],true);
                 $this->data['templates'] = array_slice($this->data['templates_all'],6);
             }
             $subs = $this->product_model->get_by_parent_id($id, 'asc');

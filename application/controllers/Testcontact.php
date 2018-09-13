@@ -10,7 +10,7 @@ class Testcontact extends Public_Controller {
         $this->load->helper('email');
         $this->load->library('session');
         $this->data['lang'] = $this->session->userdata('langAbbreviation');
-        // $this->data['lang'] ='en';
+        $this->data['lang'] ='en';
         $this->load->model('config_contact_model');
         $this->data['controller'] = $this->config_contact_model->table;
     }
@@ -41,7 +41,15 @@ class Testcontact extends Public_Controller {
 		        		$body_mail = str_replace('{'. $key .'}', $value, $body_mail);
 		        	}
 		        }
-		        send_mail("nghemalao@gmail.com","Huongdan1","minhtruong93gtvt@gmail.com",$to_mail,$to_mail,$description_mail,$body_mail,$cc_mail);
+		        $send_mail = send_mail("nghemalao@gmail.com","Huongdan1","minhtruong93gtvt@gmail.com",$to_mail,$to_mail,$description_mail,$body_mail,$cc_mail);
+	            $reponse = array(
+	                'csrf_hash' => $this->security->get_csrf_hash()
+	            );
+		        if($send_mail == 'Success'){
+		        	return $this->return_api(HTTP_SUCCESS,'Thành công',$reponse);
+		        }else{
+		        	return $this->return_api(HTTP_SUCCESS,'Thất bại',$reponse);
+		        }
 		        
 		    }
 		}

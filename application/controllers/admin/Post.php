@@ -64,7 +64,7 @@ class Post extends Admin_Controller{
             $this->load->helper('form');
             $this->load->library('form_validation');
             if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $id_template,'type' => '1')) != 0){
-                $this->data['detail'] = $this->templates_model->get_by_id($id_template);
+                $this->data['detail'] = $this->templates_model->get_by_id_templates($id_template);
             }else{
                 $this->session->set_flashdata('message_error',MESSAGE_ISSET_CONFIG_ERROR);
                 redirect('admin/'. $this->data['controller'] .'', 'refresh');
@@ -132,7 +132,7 @@ class Post extends Admin_Controller{
         $this->load->library('form_validation');
 
         $detail = $this->post_model->get_by_id($id, array('title', 'description', 'content','data_lang'));
-        $templates = $this->templates_model->get_by_id($detail['templates_id']);
+        $templates = $this->templates_model->get_by_id_templates($detail['templates_id']);
         $detail = build_language($this->controller, $detail, array('title', 'description', 'content','data_lang'), $this->page_languages);
         $parent_title = $this->build_parent_title($detail['post_category_id']);
         $detail['parent_title'] = $parent_title;
@@ -150,7 +150,7 @@ class Post extends Admin_Controller{
         $this->data['templates'] = array();
         $this->data['templates_all'] = array();
         if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $detail['templates_id'])) != 0){
-            $this->data['templates_all'] = json_decode($this->templates_model->get_by_id($detail['templates_id'])['data'],true);
+            $this->data['templates_all'] = json_decode($this->templates_model->get_by_id_templates($detail['templates_id'])['data'],true);
             $this->data['templates'] = array_slice($this->data['templates_all'],6);
         }
         $category = $this->post_category_model->get_by_parent_id(null,'asc');
