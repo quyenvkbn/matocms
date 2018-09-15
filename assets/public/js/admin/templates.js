@@ -12,26 +12,27 @@ switch(window.location.origin){
     default:
         var HOSTNAMEADMIN = 'http://localhost/adminMato/admin';
 }
-
+let [lang,number_field_type] = ['vi',document.getElementById('number_field_type').value];
 let [cursor, check, li, content,detail_templates,remove] = [0, 0, '', '',Object.entries(JSON.parse(document.getElementById('detail_templates').value)),new Array()];
 let append_field = document.getElementById('append_field');
 // thêm nhiều field
+
 function addField(number){
     let [html, count_li] = ['',0];
-    if(document.querySelectorAll('[id^="field_"]').length > 6){
+    if(document.querySelectorAll('[id^="field_"]').length > number_field_type){
         let length_field = document.querySelectorAll('[id^="field_"]').length;
         for (var i = 7; i <= length_field; i++) {
             append_field.removeChild(document.getElementById(`field_${i}`));
         }
     }
-    if(number <= 6){
-        if(number < 6){
-            alert('Số field ít nhất phải là 6');
-            document.getElementById('number_field').value = 6;
+    if(number <= number_field_type){
+        if(number < number_field_type){
+            alert(`Số field ít nhất phải là ${number_field_type}`);
+            document.getElementById('number_field').value = number_field_type;
         }
         return false;
     }
-    for(i = 6; i< number; i++){
+    for(i = number_field_type; i< number; i++){
         let [count_li , li, content] = [0, '', ''];
         JSON.parse(document.getElementById('page_languages').value, function (key, value){
             if(key.length > 0){
@@ -211,6 +212,7 @@ function addOneField(){
     if(window.location.pathname.indexOf("/templates/edit/") != '-1'){
         detail_templates.push(['key','value']);
     }
+    
 }
 function select(value,id_data){
     let [append, choose, li, count_li, content] = ['', '', '', 0, ''];
@@ -263,7 +265,7 @@ function select(value,id_data){
     document.querySelector(`#field_${id_data} .checkbox_field`).innerHTML = choose;
 }
 function listener(ev){
-    if(ev.closest('[id^="field_"]').id.replace('field_','') > 6){
+    if(Number(ev.closest('[id^="field_"]').id.replace('field_','')) > number_field_type){
         document.querySelector(`#${ev.closest('[id^="field_"]').id} > div`).setAttribute('draggable','true');
         document.querySelector(`#${ev.closest('[id^="field_"]').id}`).setAttribute('draggable','true');
         if(ev.tagName == 'INPUT'){
@@ -272,14 +274,14 @@ function listener(ev){
             ev.innerHTML = ev.value;
         }
     }
-    if(ev.name == 'title_vi[]'){
+    if(ev.name == `title_${lang}[]`){
         ev.closest('[id^="field_"]').querySelector('[data-target^="#demo"] b').innerHTML = `. ${ev.value}`;
     }
     
     
 }
 // rename all id, class 
-function rename_all(id = 6){
+function rename_all(id = number_field_type){
     let [field, collapse, collapseIn, onClickRemove, list, select, data] = [
         document.querySelectorAll('[id^="field_"]'),
         document.querySelectorAll('span[data-target^="#demo"]'),
@@ -334,6 +336,7 @@ function remove_field(id){
         if(remove_temp != 'key'){
             remove.push(remove_temp);
         }
+        
     }
 }
 
@@ -396,7 +399,7 @@ function check_validate(ev){
 // show modal form
 function view_form(ev){
     ev.setAttribute('data-target','#myModal');
-    let [html, html_language, show_html, title, list, description, count, tinymce_area] = ['', [], '', document.querySelectorAll(`[id^="field_"] [name="title_vi[]"]`), document.querySelectorAll(`[id^="list"] select`), document.querySelectorAll(`[id^="field_"] .description`), 0, ''];
+    let [html, html_language, show_html, title, list, description, count, tinymce_area] = ['', [], '', document.querySelectorAll(`[id^="field_"] [name="title_${lang}[]"]`), document.querySelectorAll(`[id^="list"] select`), document.querySelectorAll(`[id^="field_"] .description`), 0, ''];
     JSON.parse(document.getElementById('page_languages').value, function (key, value){
         if(key.length > 0){
             html_language[key] = '';
@@ -420,8 +423,8 @@ function view_form(ev){
                     break;
                 case 'radio':
                     let radio = '';
-                    for (var j = 0; j < document.getElementById(`number_list_vi${i+1}`).value.split(';;;').length; j++) {
-                        radio += `<input type="radio" name="gioi-tinh"/><span style="margin-right:10px;padding-left:5px;">${document.getElementById(`number_list_vi${i+1}`).value.split(';;;')[j].trim()}</span>`;
+                    for (var j = 0; j < document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;').length; j++) {
+                        radio += `<input type="radio" name="gioi-tinh"/><span style="margin-right:10px;padding-left:5px;">${document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;')[j].trim()}</span>`;
                     }
                     html += `<div class="form-group col-xs-12">
                             <label for="">${title[i].value}</label>${description[i].value ? ' (<i>'+ description[i].value +'</i>)' : ''}</br>
@@ -430,8 +433,8 @@ function view_form(ev){
                     break;
                 case 'checkbox':
                     let checkbox = '';
-                    for (var j = 0; j < document.getElementById(`number_list_vi${i+1}`).value.split(';;;').length; j++) {
-                        checkbox += `<label class="checkbox-inline"><input type="checkbox" name="test"/><span>${document.getElementById(`number_list_vi${i+1}`).value.split(';;;')[j].trim()}</span></label>`;
+                    for (var j = 0; j < document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;').length; j++) {
+                        checkbox += `<label class="checkbox-inline"><input type="checkbox" name="test"/><span>${document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;')[j].trim()}</span></label>`;
                     }
                     html += `<div class="form-group col-xs-12">
                             <label for="">${title[i].value}</label>${description[i].value ? ' (<i>'+ description[i].value +'</i>)' : ''}</br>
@@ -441,8 +444,8 @@ function view_form(ev){
                 case 'select':
                     let select = '';
                     count+=1;
-                    for (var j = 0; j < document.getElementById(`number_list_vi${i+1}`).value.split(';;;').length; j++) {
-                        select += `<option value="">${document.getElementById(`number_list_vi${i+1}`).value.split(';;;')[j].trim()}</option>`;
+                    for (var j = 0; j < document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;').length; j++) {
+                        select += `<option value="">${document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;')[j].trim()}</option>`;
                     }
                     html += `<div class="form-group col-xs-12">
                             <label for="">${title[i].value}</label>${description[i].value ? ' (<i>'+ description[i].value +'</i>)' : ''}
@@ -497,8 +500,8 @@ function view_form(ev){
                             break;
                         case 'radio':
                             let radio = '';
-                            for (var j = 0; j < document.getElementById(`number_list_vi${i+1}`).value.split(';;;').length; j++) {
-                                radio += `<input type="radio" name="gioi-tinh"/><span style="margin-right:10px;padding-left:5px;">${document.getElementById(`number_list_vi${i+1}`).value.split(';;;')[j].trim()}</span>`;
+                            for (var j = 0; j < document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;').length; j++) {
+                                radio += `<input type="radio" name="gioi-tinh"/><span style="margin-right:10px;padding-left:5px;">${document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;')[j].trim()}</span>`;
                             }
                             html_language[key] += `<div class="form-group col-xs-12" style="padding:0px;">
                                     <label for="">${document.querySelectorAll(`[id^="field_"] [name="title_${key}[]"]`)[i].value}</label>${description[i].value ? ' (<i>'+ description[i].value +'</i>)' : ''}</br>
@@ -507,8 +510,8 @@ function view_form(ev){
                             break;
                         case 'checkbox':
                             let checkbox = '';
-                            for (var j = 0; j < document.getElementById(`number_list_vi${i+1}`).value.split(';;;').length; j++) {
-                                checkbox += `<label class="checkbox-inline"><input type="checkbox" name="test"/><span>${document.getElementById(`number_list_vi${i+1}`).value.split(';;;')[j].trim()}</span></label>`;
+                            for (var j = 0; j < document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;').length; j++) {
+                                checkbox += `<label class="checkbox-inline"><input type="checkbox" name="test"/><span>${document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;')[j].trim()}</span></label>`;
                             }
                             html_language[key] += `<div class="form-group col-xs-12" style="padding:0px;">
                                     <label for="">${document.querySelectorAll(`[id^="field_"] [name="title_${key}[]"]`)[i].value}</label>${description[i].value ? ' (<i>'+ description[i].value +'</i>)' : ''}</br>
@@ -518,8 +521,8 @@ function view_form(ev){
                         case 'select':
                             let select = '';
                             count+=1;
-                            for (var j = 0; j < document.getElementById(`number_list_vi${i+1}`).value.split(';;;').length; j++) {
-                                select += `<option value="">${document.getElementById(`number_list_vi${i+1}`).value.split(';;;')[j].trim()}</option>`;
+                            for (var j = 0; j < document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;').length; j++) {
+                                select += `<option value="">${document.getElementById(`number_list_${lang}${i+1}`).value.split(';;;')[j].trim()}</option>`;
                             }
                             html_language[key] += `<div class="form-group col-xs-12" style="padding:0px;">
                                     <label for="">${document.querySelectorAll(`[id^="field_"] [name="title_${key}[]"]`)[i].value}</label>${description[i].value ? ' (<i>'+ description[i].value +'</i>)' : ''}
@@ -641,7 +644,7 @@ function drop(ev) {
     var after = ev.target.closest('[id^="field_"]').id;
     let HTML = document.getElementById(after).innerHTML;
     if(before != null  && before != ''){
-        if(after.replace("field_", "") <= 6 || before.indexOf("field_") == '-1'){
+        if(Number(after.replace("field_", "")) <= number_field_type || before.indexOf("field_") == '-1'){
             return false;
         }
         document.getElementById(after).innerHTML = document.getElementById(before).innerHTML;
@@ -651,23 +654,26 @@ function drop(ev) {
                 document.querySelectorAll('#append_field [id^="field_"]')[i].innerHTML = HTML;
                 HTML = LET;
             }
+            console.log(1);
         }else{
             for (i = Number(after.replace("field_", ""))-1; i > Number(before.replace("field_", ""))-1; i--) {
                 const LET = document.querySelectorAll('#append_field [id^="field_"]')[i-1].innerHTML;
                 document.querySelectorAll('#append_field [id^="field_"]')[i-1].innerHTML = HTML;
                 HTML = LET;
             }
+            console.log(1);
         }
         rename_all();
         if(window.location.pathname.indexOf("/templates/edit/") != '-1'){
-            detail_templates.splice(after.replace("field_", "")-1, 0,detail_templates.splice(before.replace("field_", "")-1, 1)[0]);
+            detail_templates.splice(Number(after.replace("field_", ""))-1, 0,detail_templates.splice(Number(before.replace("field_", ""))-1, 1)[0]);
         }
+        
     }
 }
 
 //
 function onfocus_text(ev){
-    if(ev.closest('[id^="field_"]').id.replace('field_','') >= 6){
+    if(Number(ev.closest('[id^="field_"]').id.replace('field_','')) >= number_field_type){
         document.querySelector(`#${ev.closest('[id^="field_"]').id} > div`).setAttribute('draggable','false');
         document.querySelector(`#${ev.closest('[id^="field_"]').id}`).setAttribute('draggable','false');
     }
@@ -725,8 +731,13 @@ function check_multiple(ev){
 }
 
 function by_slug(slug_name){
-    var slug=['image_shared', 'slug_shared', 'parent_id_shared', 'title', 'description', 'content'];
-    for (var i = 6; i < slug_name.length; i++) {
+    if(number_field_type == 6){
+        var slug=['image_shared', 'slug_shared', 'parent_id_shared', 'title', 'description', 'content'];
+    }else{
+        var slug=['image_shared', 'slug_shared', 'parent_id_shared', 'title', 'description', 'content', 'quantity', 'price'];
+    }
+    
+    for (var i = number_field_type; i < slug_name.length; i++) {
         var slug_title = to_slug(slug_name[i].value,'_');
         if(slug.indexOf(slug_title) >= 0){
             var j = 1;
@@ -749,8 +760,8 @@ function submit_shared(){
         document.querySelectorAll('select.select_type')[i].removeAttribute('disabled');
     }
     let data = new FormData(document.querySelector('form.form-horizontal'));
-    for (var i = 0; i < by_slug(document.querySelectorAll('#append_field [id^="demo"] .title[name="title_vi[]"]')).length; i++) {
-        data.append('slug[]', by_slug(document.querySelectorAll('#append_field [id^="demo"] .title[name="title_vi[]"]'))[i]);
+    for (var i = 0; i < by_slug(document.querySelectorAll(`#append_field [id^="demo"] .title[name="title_${lang}[]"]`)).length; i++) {
+        data.append('slug[]', by_slug(document.querySelectorAll(`#append_field [id^="demo"] .title[name="title_${lang}[]"]`))[i]);
     }
     data.append('csrf_sitecom_token', document.getElementById('csrf_sitecom_token').value);
     for (var i = 0; i < document.querySelectorAll('#append_field [id^="demo"] .required_check').length; i++) {
@@ -768,8 +779,8 @@ function submit_shared(){
         let var_count = 0;
         detail_templates.map((index,key) => {
             if(typeof index[1] == 'string'){
-                add_field[var_count] =  by_slug(document.querySelectorAll('#append_field [id^="demo"] .title[name="title_vi[]"]'))[var_count];
-                detail[by_slug(document.querySelectorAll('#append_field [id^="demo"] .title[name="title_vi[]"]'))[var_count]] = var_count;
+                add_field[var_count] =  by_slug(document.querySelectorAll(`#append_field [id^="demo"] .title[name="title_${lang}[]"]`))[var_count];
+                detail[by_slug(document.querySelectorAll(`#append_field [id^="demo"] .title[name="title_${lang}[]"]`))[var_count]] = var_count;
             }else{
                 detail[index[0]] = index[1];
             }
@@ -790,13 +801,13 @@ function submit_shared(){
                 if(window.location.pathname.indexOf("/templates/edit/") != '-1'){
                     document.getElementById('csrf_sitecom_token').value = html.reponse.csrf_hash;
                     detail_templates = Object.entries(JSON.parse(html.reponse.detail));
+                    remove = new Array();
                     for (var i = 0; i < document.querySelectorAll('select.select_type').length; i++) {
                         document.querySelectorAll('select.select_type')[i].setAttribute('disabled','disabled');
                     }
                 }else{
                     window.location.href=HOSTNAMEADMIN+"/templates";
                 }
-
             }else{
                 alert(html.message);
                 if(html.reponse.csrf_hash != 'undefined'){
@@ -804,7 +815,6 @@ function submit_shared(){
                 }else{
                     location.reload();
                 }
-                
             }
         }
 

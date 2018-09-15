@@ -20,6 +20,7 @@ class Product extends Admin_Controller{
         $this->data['template'] = build_template();
         $this->data['request_language_template'] = $this->request_language_template;
         $this->data['controller'] = $this->product_model->table;
+        $this->data['number_field'] = 8;
 		$this->author_data = handle_author_common_data();
 	}
 
@@ -48,7 +49,7 @@ class Product extends Admin_Controller{
         if($id_template &&  is_numeric($id_template) && ($id_template > 0)){
     		$this->load->helper('form');
             if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $id_template, 'type' => '2')) != 0){
-                $this->data['detail'] = $this->templates_model->get_by_id($id_template);
+                $this->data['detail'] = $this->templates_model->get_by_id_templates($id_template);
             }else{
                 $this->session->set_flashdata('message_error',MESSAGE_ISSET_CONFIG_ERROR);
                 redirect('admin/'. $this->data['controller'] .'', 'refresh');
@@ -59,7 +60,7 @@ class Product extends Admin_Controller{
                 $this->load->library('form_validation');
                 $slug = $this->input->post('slug_shared');
                 $unique_slug = $this->product_model->build_unique_slug($slug);
-                $templates = array_slice(json_decode($this->data['detail']['data'],true), 6);
+                $templates = array_slice(json_decode($this->data['detail']['data'],true), $this->data['number_field']);
                 $request_data = handle_multi_language_requests($this->input->post(), $this->page_languages, $templates);
                 if(!file_exists("assets/upload/".$this->data['controller']."/".$unique_slug)){
                     mkdir("assets/upload/".$this->data['controller']."/".$unique_slug, 0755);
@@ -67,13 +68,16 @@ class Product extends Admin_Controller{
                 }
                 $image = $this->upload_image('image_shared', $_FILES['image_shared']['name'], 'assets/upload/'. $this->data['controller'].'/'.$unique_slug, 'assets/upload/'.$this->data['controller'].'/'.$unique_slug.'/thumb');
                 unset($_FILES['image_shared']);
-                $check_file = $this->check_all_file($_FILES, $templates,$unique_slug);//json_decode($this->data['detail']['data'],true)
+                $check_file = $this->check_all_file($_FILES, $templates,$unique_slug);
+                $data = array_merge($request_data['data'], $check_file);
                 $shared_request = array(
                     'slug' => $unique_slug,
                     'image' => $image,
+                    'quantity' => $this->input->post('quantity'),
+                    'price' => $this->input->post('price'),
                     'product_category_id' => $this->input->post('parent_id_shared'),
                     'templates_id' => $id_template,
-                    'data' => json_encode(array_merge($request_data['data'], $check_file)),
+                    'data' => (empty($data) ? '{}' : json_encode($data)),
                 );
                 $this->db->trans_begin();
                 $insert = $this->product_model->common_insert(array_merge($shared_request,$this->author_data));
@@ -105,12 +109,12 @@ class Product extends Admin_Controller{
                 $this->load->helper('form');
                 $this->load->library('form_validation');
                 $detail = $this->product_model->get_by_id($id, array('title', 'description', 'content','data_lang'));
-                $templates = $this->templates_model->get_by_id($detail['templates_id']);
+                $templates = $this->templates_model->get_by_id_templates($detail['templates_id']);
                 $detail = build_language($this->data['controller'], $detail, array('title', 'description', 'content','data_lang'), $this->page_languages);
                 $parent_title = $this->build_parent_title($detail['product_category_id']);
                 $detail['parent_title'] = $parent_title;
                 $this->data['detail'] = $detail;
-                $this->data['templates'] = array_slice(json_decode($templates['data'],true), 6);
+                $this->data['templates'] = array_slice(json_decode($templates['data'],true), $this->data['number_field']);
                 $this->data['templates_all'] = json_decode($templates['data'],true);
                 $this->render('admin/product/detail_product_view');
             }else{
@@ -127,6 +131,7 @@ class Product extends Admin_Controller{
         $id = $this->input->post('id');
         if($id &&  is_numeric($id) && ($id > 0)){
             $product = $this->product_model->find($id);
+            $templates = array_slice(json_decode($this->templates_model->find($product['templates_id'])['data'],true), $this->data['number_field']);
             if($this->product_model->find_rows(array('id' => $id,'is_deleted' => 0)) == 0){
                 return $this->return_api(HTTP_NOT_FOUND,MESSAGE_ISSET_ERROR,$reponse);
             }
@@ -135,12 +140,21 @@ class Product extends Admin_Controller{
             if(count($menu_model) > 0){
                 return $this->return_api(HTTP_NOT_FOUND,sprintf(MESSAGE_ERROR_REMOVE, count($menu_model)));
             }
-            $data = array('is_deleted' => 1);
-            $update = $this->product_model->common_update($id, $data);
-            if($update){
+
+
+
+            $delete = $this->product_model->common_delete($id);//chưa xong
+
+
+
+            if($delete){
                 $reponse = array(
                     'csrf_hash' => $this->security->get_csrf_hash()
                 );
+                array_map('unlink', glob('./assets/upload/product/'.$product['slug'].'/thumb/*.*'));
+                array_map('unlink', glob('./assets/upload/product/'.$product['slug'].'/*.*'));
+                rmdir('./assets/upload/product/'.$product['slug'].'/thumb');
+                rmdir('./assets/upload/product/'.$product['slug']);
                 return $this->return_api(HTTP_SUCCESS,MESSAGE_REMOVE_SUCCESS,$reponse);
             }
             return $this->return_api(HTTP_NOT_FOUND,MESSAGE_REMOVE_ERROR);
@@ -160,8 +174,8 @@ class Product extends Admin_Controller{
             $this->data['templates'] = array();
             $this->data['templates_all'] = array();
             if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $detail['templates_id'])) != 0){
-                $this->data['templates_all'] = json_decode($this->templates_model->get_by_id($detail['templates_id'])['data'],true);
-                $this->data['templates'] = array_slice($this->data['templates_all'],6);
+                $this->data['templates_all'] = json_decode($this->templates_model->get_by_id_templates($detail['templates_id'])['data'],true);
+                $this->data['templates'] = array_slice($this->data['templates_all'],$this->data['number_field']);
             }
             $subs = $this->product_model->get_by_parent_id($id, 'asc');
             $this->build_new_category($product_category,0,$this->data['product_category'],$subs['product_category_id']);
@@ -186,6 +200,8 @@ class Product extends Admin_Controller{
                     $check_file = $this->check_all_file($_FILES, $this->data['templates'],$unique_slug,$detail['data']);
                     $shared_request = array(
                         'slug' => $unique_slug,
+                        'quantity' => $this->input->post('quantity'),
+                        'price' => $this->input->post('price'),
                         'product_category_id' => $this->input->post('parent_id_shared'),
                         'data' => json_encode(array_merge($request_data['data'], $check_file)),
                     );

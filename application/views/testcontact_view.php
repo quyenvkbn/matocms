@@ -98,11 +98,7 @@
             html => {
                 if(html.status == "200"){
                     alert(html.message);
-                    if(window.location.pathname.indexOf("/config_contact/edit/") != '-1'){
-                        document.getElementById('csrf_sitecom_token').value = html.reponse.csrf_hash;
-                    }else{
-                        window.location.href=HOSTNAMEADMIN+"/config_contact";
-                    }
+                    document.getElementById('csrf_sitecom_token').value = html.reponse.csrf_hash;
                 }else{
                     alert(html.message);
                     location.reload();

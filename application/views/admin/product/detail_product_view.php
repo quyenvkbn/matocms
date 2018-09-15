@@ -65,6 +65,14 @@
                                                 <th>Danh Mục</th>
                                                 <td><?php echo $detail['parent_title'] ?></td>
                                             </tr>
+                                            <tr>
+                                                <th>Số lượng</th>
+                                                <td><?php echo $detail['quantity'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Giá</th>
+                                                <td><?php echo $detail['price'] ?></td>
+                                            </tr>
                                             <?php if (!empty($data)): ?>
                                                 <?php foreach ($data as $key => $value): ?>
                                                     <?php if ($templates[$key]['type'] != 'radio' && $templates[$key]['type'] != 'checkbox' && $templates[$key]['type'] != 'select' && $templates[$key]['type'] != 'file'): ?>
@@ -120,7 +128,7 @@
                                                                 <?php if ($templates[$k]['type'] != 'file' && !isset($templates[$k]['check_multiple']) && $templates[$k]['type'] != 'checkbox'): ?>
                                                                     <tr>
                                                                         <th style="width: 100px"><?php echo $templates[$k]['title'][$key]?>: </th>
-                                                                        <td><?php echo $templates[$k]['choice'][$key][$val] ?></td>
+                                                                        <td><?php echo ($val != "") ? $templates[$k]['choice'][$key][$val] : '' ?></td>
                                                                     </tr>
                                                                 <?php endif ?>
                                                                 <?php if (($templates[$k]['type'] != 'file' && isset($templates[$k]['check_multiple'])) || $templates[$k]['type'] == 'checkbox'): ?>

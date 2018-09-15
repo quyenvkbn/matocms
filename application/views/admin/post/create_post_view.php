@@ -269,7 +269,7 @@
             }else if(type == 'select'){
                 if(document.querySelectorAll('div.form-group.required')[i].querySelector('select').value == ''){
                     document.querySelectorAll('div.form-group.required')[i].classList.add("has-error");
-                    document.querySelectorAll('div.form-group.required')[i].setAttribute('oninput',`check_validate(this,'${type}')`);
+                    document.querySelectorAll('div.form-group.required')[i].querySelector('select').setAttribute('onchange',`check_validate(this,'${type}')`);
                     document.querySelectorAll('div.form-group.required')[i].querySelector('span').classList.remove("hidden");
                 }
             }else if(type == 'date'){
@@ -346,6 +346,8 @@
             value = (ev.value == '') ? true : false;
         }else if(type == 'file'){
             value = (ev.querySelectorAll('input').files.length == 0 && ev.previousElementSibling.querySelector('.no_image') != null) ? true : false;
+        }else if(type == 'select'){
+            value = (ev.value == '') ? true : false;
         }else{
             value = (ev.querySelector(type).value) ? true : false;
         }

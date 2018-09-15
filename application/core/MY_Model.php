@@ -150,6 +150,12 @@ class MY_Model extends CI_Model {
         return $this->db->update($this->table, $data);
     }
 
+    public function common_delete($id) {
+        $this->db->where('id', $id);
+        
+        return $this->db->delete($this->table);
+    }
+
     public function common_update_multiple($data) {
         return $this->db->update_batch($this->table, $data,'id');
     }
@@ -267,10 +273,10 @@ class MY_Model extends CI_Model {
         return $this->db->count_all_results($this->table);
     }
     public function find_results($id_templates){
-        $this->db->query('SET SESSION group_concat_max_len = 10000000');
-        $this->db->select($this->table .'.id, '. $this->table .'.data, '. $this->table .'.slug');
-        $this->db->select('GROUP_CONCAT('. $this->table_lang .'.id ORDER BY '. $this->table_lang .'.language separator \' ||| \') as '. $this->table .'_id');
-        $this->db->select('GROUP_CONCAT('. $this->table_lang .'.data_lang ORDER BY '. $this->table_lang .'.language separator \' ||| \') as '. $this->table .'_data_lang');
+        // $this->db->query('SET SESSION group_concat_max_len = 10000000');
+        $this->db->select($this->table .'.id, '. $this->table .'.data, '. $this->table .'.slug, '.$this->table_lang .'.*');
+        // $this->db->select('GROUP_CONCAT('. $this->table_lang .'.id ORDER BY '. $this->table_lang .'.language separator \' ||| \') as '. $this->table .'_id');
+        // $this->db->select('GROUP_CONCAT('. $this->table_lang .'.data_lang ORDER BY '. $this->table_lang .'.language separator \' ||| \') as '. $this->table .'_data_lang');
         $this->db->join($this->table_lang, $this->table_lang .'.'. $this->table .'_id = '. $this->table .'.id', 'left');
         $this->db->where($this->table.'.templates_id', $id_templates);
         return $this->db->get($this->table)->result_array();
