@@ -20,6 +20,7 @@ class Post extends Admin_Controller{
         $this->data['template'] = build_template();
         $this->data['request_language_template'] = $this->request_language_template;
         $this->controller = 'post';
+        $this->data['number_field'] = 6;
         $this->data['controller'] = $this->controller;
 
 		$this->author_data = handle_author_common_data();
@@ -79,7 +80,7 @@ class Post extends Admin_Controller{
                 if($check_upload == true){
                 	$slug = $this->input->post('slug_shared');
                     $unique_slug = $this->post_model->build_unique_slug($slug);
-                    $templates = array_slice(json_decode($this->data['detail']['data'],true), 6);
+                    $templates = array_slice(json_decode($this->data['detail']['data'],true), $this->data['number_field']);
                     $request_data = handle_multi_language_requests($this->input->post(), $this->page_languages, $templates);
                     if(!file_exists("assets/upload/".$this->data['controller']."/".$unique_slug)){
                         mkdir("assets/upload/".$this->data['controller']."/".$unique_slug, 0777);
@@ -137,7 +138,7 @@ class Post extends Admin_Controller{
         $parent_title = $this->build_parent_title($detail['post_category_id']);
         $detail['parent_title'] = $parent_title;
         $this->data['detail'] = $detail;
-        $this->data['templates'] = array_slice(json_decode($templates['data'],true), 6);
+        $this->data['templates'] = array_slice(json_decode($templates['data'],true), $this->data['number_field']);
         $this->data['templates_all'] = json_decode($templates['data'],true);
         $this->render('admin/post/detail_post_view');
     }
@@ -151,7 +152,7 @@ class Post extends Admin_Controller{
         $this->data['templates_all'] = array();
         if($this->templates_model->find_rows(array('is_deleted' => 0, 'id' => $detail['templates_id'])) != 0){
             $this->data['templates_all'] = json_decode($this->templates_model->get_by_id_templates($detail['templates_id'])['data'],true);
-            $this->data['templates'] = array_slice($this->data['templates_all'],6);
+            $this->data['templates'] = array_slice($this->data['templates_all'],$this->data['number_field']);
         }
         $category = $this->post_category_model->get_by_parent_id(null,'asc');
         $detail['data'] = json_decode($detail['data'],true);

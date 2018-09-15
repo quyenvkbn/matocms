@@ -20,12 +20,14 @@
             Sửa
             <small>
                 cấu hình
+                <?php echo $number_field; ?>
             </small>
         </h1>
     </section>
     <input type="text" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash() ?>" placeholder="" class="form-control hidden" id="csrf_sitecom_token">
     <input type="text" name="page_languages" value='<?php echo json_encode($page_languages); ?>' placeholder="" class="form-control hidden" id="page_languages">
     <input type="text" name="detail_templates" value='<?php echo json_encode(json_decode($detail['data'],true)); ?>' placeholder="" class="form-control hidden" id="detail_templates">
+    <input type="text" name="" value='<?php echo $number_field; ?>' placeholder="" class="form-control hidden" id="number_field_type">
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -89,13 +91,13 @@
                                                 );
                                             ?>
                                             <?php foreach (json_decode($detail['data'],true) as $key => $value): ?>
-                                                <div class="form-group col-ms-12" style="padding: 0px;margin-bottom:5px;" id="field_<?php echo $i;?>"  draggable="<?php echo ($i <= 6)? 'false' : 'true'; ?>" ondrop="drop(event)" ondragover="allowDrop(event)"> 
-                                                    <div class="col-xs-12 drop-drag" draggable="<?php echo ($i <= 6)? 'false' : 'true'; ?>" ondragstart="drag(event)">
+                                                <div class="form-group col-ms-12" style="padding: 0px;margin-bottom:5px;" id="field_<?php echo $i;?>"  draggable="<?php echo ($i <= 8)? 'false' : 'true'; ?>" ondrop="drop(event)" ondragover="allowDrop(event)"> 
+                                                    <div class="col-xs-12 drop-drag" draggable="<?php echo ($i <= 8)? 'false' : 'true'; ?>" ondragstart="drag(event)">
                                                         <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;text-align: left;">
                                                             <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-10 check-collapse collapsed" style="height:35px;padding-top:2px" aria-expanded="false">
                                                                 <span style="padding-left:10px;font-weight: 500;font-size: 1.2em;"><?php echo $i;?></span> <b style="font-size: 1.18em;font-weight: 500;">. <?php echo $value['title']['vi']; ?> </b>
                                                             </span>
-                                                            <i style="float: right;padding-right:5px;font-size:1.8em;<?php echo ($i <= 6) ? 'display: none;' : '';?>" class="fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
+                                                            <i style="float: right;padding-right:5px;font-size:1.8em;<?php echo ($i <= 8) ? 'display: none;' : '';?>" class="fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
                                                         </div>
                                                         <div id="demo<?php echo $i;?>" class="collapse form-group" aria-expanded="false">
                                                             <div class="col-xs-12" style="padding: 0px;">
@@ -120,7 +122,7 @@
                                                             <div class="col-xs-12" style="padding: 0px;">
                                                                 <div class="col-sm-6 col-xs-12">
                                                                     <label class="checkbox-inline">
-                                                                        <input type="checkbox" name="" disabled value="" class="check_language" <?php echo ($value['check_language'] == 'true') ? 'checked' : ''; ?> onclick="check_multiple(this)" <?php echo ($i <= 6 || in_array($value['type'],$type) || $value['type'] == 'file')? 'disabled' : ''; ?>>Chỉ cho phép nhập hoặc chọn một ngôn ngữ
+                                                                        <input type="checkbox" name="" disabled value="" class="check_language" <?php echo ($value['check_language'] == 'true') ? 'checked' : ''; ?> onclick="check_multiple(this)" <?php echo ($i <= 8 || in_array($value['type'],$type) || $value['type'] == 'file')? 'disabled' : ''; ?>>Chỉ cho phép nhập hoặc chọn một ngôn ngữ
                                                                     </label>
                                                                 </div>
                                                                 <div class="col-sm-6 col-xs-12 checkbox_field">
@@ -132,14 +134,14 @@
                                                                 </div>
                                                                 <div class="col-xs-12">
                                                                     <label class="checkbox-inline">
-                                                                        <input type="checkbox" name="" class="required_check" onclick="check_required(this)"/ <?php echo (isset($value['required']))? 'checked' : ''; ?> <?php echo ($i <= 6 && isset($value['required']))? 'disabled' : ''; ?>><span>Bắt buộc chọn hoặc nhập thông tin</span>
+                                                                        <input type="checkbox" name="" class="required_check" onclick="check_required(this)"/ <?php echo (isset($value['required']))? 'checked' : ''; ?> <?php echo ($i==2 || $i==3 || $i==4)? 'disabled' : ''; ?>><span>Bắt buộc chọn hoặc nhập thông tin</span>
                                                                     </label>
                                                                 </div>
                                                             </div>
                                                             <?php if (isset($value['required'])): ?>
                                                                 <div class="col-xs-12 content-required" style="margin-top: 5px;"> 
                                                                     <label for="">Nội dung hiện lên khi Không chọn hoặc nhập thông tin</label>
-                                                                    <input type="text" name="required_content[]" value="" placeholder="" onblur="listener(this)" class="form-control required">
+                                                                    <input type="text" name="required_content[]" value="<?php echo (isset($value['required']))? $value['required'] : ''; ?>" placeholder="" onblur="listener(this)" class="form-control required">
                                                                </div>
                                                             <?php endif ?>
                                                             <div class="col-xs-12" id="data<?php echo $i;?>">
@@ -162,7 +164,7 @@
                                                                                     <div class="box-body" style="padding:0px;">
                                                                                         <div class="col-xs-12 required" style="padding: 0px;">
                                                                                             <label class="control-label" for="">Tiêu đề</label>
-                                                                                            <input type="text" name="title_<?php echo $k;?>[]" placeholder="" value="<?php echo $value['title'][$k]; ?>"  onfocus="onfocus_text(this)" onblur="listener(this)" <?php echo ($i <= 6) ? 'readonly' : '';?> class="form-control title" >
+                                                                                            <input type="text" name="title_<?php echo $k;?>[]" placeholder="" value="<?php echo $value['title'][$k]; ?>"  onfocus="onfocus_text(this)" onblur="listener(this)" <?php echo ($i <= 8) ? 'readonly' : '';?> class="form-control title" >
                                                                                             <span class="help-block hidden">Bạn cần nhập trường này</span>
                                                                                         </div>
                                                                                         <div class="col-xs-12 show_textarea" style="padding:0px;">

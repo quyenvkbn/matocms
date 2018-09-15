@@ -26,6 +26,7 @@
     </section>
     <input type="text" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash() ?>" placeholder="" class="form-control hidden" id="csrf_sitecom_token">
     <input type="text" name="page_languages" value='<?php echo json_encode($page_languages); ?>' placeholder="" class="form-control hidden" id="page_languages">
+    <input type="text" name="" value='<?php echo $number_field; ?>' placeholder="" class="form-control hidden" id="number_field_type">
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -46,7 +47,7 @@
                                             <span><?php echo $this->session->flashdata('message'); ?></span>
                                         </div>
                                         <div class="col-xs-12" style="padding-bottom: 10px;">
-                                            <div class="col-xs-12 required" id="parent_configuration" style="padding: 0px;">
+                                            <!-- <div class="col-xs-12 required" id="parent_configuration" style="padding: 0px;">
                                                 <?php 
                                                     echo form_label('Chọn loại cấu hình', 'type_configuration'); 
                                                     echo form_error('type_configuration');
@@ -55,7 +56,7 @@
                                                     <option value="1">Post</option>
                                                     <option value="2">Product</option>
                                                 </select>
-                                            </div>
+                                            </div> -->
                                             <div class="col-sm-6 col-xs-12 required" id="parent_configuration" style="padding: 0px;">
                                                 <?php 
                                                     echo form_label('Tên cấu hình', 'name_configuration'); 
@@ -69,7 +70,7 @@
                                                 <?php 
                                                     echo form_label('Số field', 'number_field');
                                                     echo form_error('number_field');
-                                                    echo form_input('number_field',6, 'class="form-control" id="number_field" ');
+                                                    echo form_input('number_field',$number_field, 'class="form-control" id="number_field" ');
                                                 ?>
                                                 <span class="input-group-btn">
                                                     <a class="btn btn-primary" onclick="addField(document.getElementById('number_field').value)" style="cursor:pointer; margin-top: 25px;">Xác nhận</a>
@@ -80,18 +81,18 @@
                                             <h4 style="margin-top: 5px;font-weight: bold;color:red">Nội dung bắt buộc</h4>
                                             <?php 
                                                 $title = array(
-                                                    'vi' => array('Hình ảnh', 'Slug', 'Danh mục', 'Tiêu đề', 'Mô tả', 'Nội dung'),
-                                                    'en' => array('Image', 'Slug', 'Category', 'Title', 'Description', 'Content'),
+                                                    'vi' => array('Hình ảnh', 'Slug', 'Danh mục', 'Tiêu đề', 'Mô tả', 'Nội dung','Số lượng','Giá'),
+                                                    'en' => array('Image', 'Slug', 'Category', 'Title', 'Description', 'Content','Quantity', 'Price'),
                                                 );
                                             ?>
-                                            <?php for ($i = 1; $i < 7;$i++): ?>
+                                            <?php for ($i = 1; $i <= $number_field;$i++): ?>
                                                 <div class="form-group col-ms-12" style="padding: 0px;margin-bottom:5px;" id="field_<?php echo $i;?>"  draggable="false" ondrop="drop(event)" ondragover="allowDrop(event)"> 
                                                     <div class="col-xs-12 drop-drag" draggable="false" ondragstart="drag(event)">
                                                         <div class="btn btn-primary col-ms-12" style="padding:0px; padding-top:5px; width:100%;text-align: left;">
                                                             <span data-toggle="collapse" data-target="#demo<?php echo $i;?>" class="col-xs-12 check-collapse collapsed" style="height:35px;padding-top:2px;" aria-expanded="false">
                                                                 <span style="padding-left:10px;font-weight: 500;font-size: 1.2em;"><?php echo $i;?></span><b style="font-size: 1.18em;font-weight: 500">. <?php echo $title['vi'][$i-1] ?></b>
                                                             </span>
-                                                            <i style="float: right;padding-right:5px;marrgin-top:-10px;display: none;" class="fa-2x fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
+                                                            <i style="float: right;padding-right:5px;display: none;" class="fa-2x fa fa-close remove" onclick="remove_field(<?php echo $i;?>)"></i>
                                                         </div>
                                                         <div id="demo<?php echo $i;?>" class="collapse form-group" aria-expanded="false" style="height: 0px;">
                                                             <div class="col-xs-12" style="padding: 0px;">
@@ -102,7 +103,7 @@
                                                                 <div class="col-sm-6 col-xs-12" id="list<?php echo $i;?>">
                                                                     <label for="" style="margin-bottom: 0px; margin-top: 7px;">Kiểu Nhập</label>
                                                                     <select name="type[]"  class="form-control select_type" onchange="select(this,'<?php echo $i;?>')" disabled>
-                                                                        <option value="text" <?php echo ($i == 2 || $i == 4)? 'selected' : '' ?>>Text</option>
+                                                                        <option value="text" <?php echo ($i == 2 || $i == 4 || $i == 7 || $i == 8)? 'selected' : '' ?>>Text</option>
                                                                         <option value="textarea" <?php echo ($i == 5 || $i == 6)? 'selected' : '' ?>>Textarea</option>
                                                                         <option value="radio">Radio</option>
                                                                         <option value="checkbox">Checkbox</option>
@@ -116,7 +117,7 @@
                                                             <div class="col-xs-12" style="padding: 0px;">
                                                                 <div class="col-sm-6 col-xs-12">
                                                                     <label class="checkbox-inline">
-                                                                        <input type="checkbox" name="" value="" class="check_language" <?php echo ($i < 4 ) ? 'checked' : ''; ?> onclick="check_multiple(this)" disabled>Chỉ cho phép nhập hoặc chọn một ngôn ngữ
+                                                                        <input type="checkbox" name="" value="" class="check_language" <?php echo ($i < 4 || $i > 6) ? 'checked' : ''; ?> onclick="check_multiple(this)" disabled>Chỉ cho phép nhập hoặc chọn một ngôn ngữ
                                                                     </label>
                                                                 </div>
                                                                 <div class="col-sm-6 col-xs-12 checkbox_field">

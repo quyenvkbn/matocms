@@ -11,20 +11,21 @@
             </small>
         </h1>
     </section>
-
     <!-- Main content -->
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
                 <div class="box box-default">
                     <div class="box-body">
+
                         <?php
                         echo form_open_multipart('', array('class' => 'form-horizontal'));
                         ?>
                         <?php
                             $a_language = '';
+                            $detail['data'] = json_decode($detail['data'],true);
                             foreach ($page_languages as $k => $vals){
-                                $detail['data_lang_'.$k] = json_decode($detail['data_lang_'.$k],true); 
+                                $detail['data_lang_'.$k] = json_decode($detail['data_lang_'.$k],true);
                                 $multiple_language[$k] = '';
                             }
                             foreach ($templates as $key => $value) {
@@ -45,7 +46,7 @@
                                         case 'radio':
                                             $radio = '';
                                             foreach ($value['choice']['vi'] as $k => $val) {
-                                               $radio .= '<input type="radio" name="' . $key . '" value="' . $k . '" ' .(($detail['data'][$key] == $k) ? 'checked' : ''). ' /><span style="margin-right:10px;padding-left:5px;">' . $val . '</span>';
+                                               $radio .= '<input type="radio" name="' . $key . '" value="' . $k . '" ' .(($detail['data'][$key] != "" && $detail['data'][$key] == $k) ? 'checked' : ''). ' /><span style="margin-right:10px;padding-left:5px;">' . $val . '</span>';
                                             }
                                             $a_language .= '<div class="form-group col-xs-12 ' .$required. '" ><label for="' . $value['type'] . '">' . $value['title']['vi'] . '</label>' . ($value['description'] ? ' (<i>' .  $value['description'] . '</i>)' : '') . '</br>' . $radio.$required_span .'</div>';
                                             break;
@@ -164,7 +165,6 @@
                             echo form_error('image_shared');
                             echo form_upload('image_shared', set_value('image_shared'), 'class="form-control"');
                             ?>
-                            <br>
                         </div>
                         <div class="form-group col-xs-12 required">
                             <?php
@@ -183,6 +183,20 @@
                                 <?php echo $product_category; ?>
                             </select>
                             <span class="help-block hidden"><?php echo $templates_all['slug_shared']['required']; ?></span>
+                        </div>
+                        <div class="form-group col-xs-12 <?php echo isset($templates_all['quantity']['required']) ? 'required' : '' ;?>">
+                            <?php
+                            echo form_label('Số lượng', 'text');
+                            echo form_input('quantity', $detail['quantity'], 'class="form-control"');
+                            ?>
+                            <?php echo isset($templates_all['quantity']['required']) ? '<span class="help-block hidden">' .$templates_all['quantity']['required']. '</span>' : '' ;?>
+                        </div>
+                        <div class="form-group col-xs-12 <?php echo isset($templates_all['price']['required']) ? 'required' : '' ;?>">
+                            <?php
+                            echo form_label('Giá', 'text');
+                            echo form_input('price', $detail['price'], 'class="form-control"');
+                            ?>
+                            <?php echo isset($templates_all['price']['required']) ? '<span class="help-block hidden">' .$templates_all['price']['required']. '</span>' : '' ;?>
                         </div>
                         <?php echo $a_language; ?>
                         <div>
@@ -333,8 +347,14 @@
                     document.querySelectorAll('div.form-group.required')[i].setAttribute('oninput',`check_validate(this,'${type}')`);
                     document.querySelectorAll('div.form-group.required')[i].querySelector('span').classList.remove("hidden");
                 }
-            }else if(type == 'textarea' || type == 'select'){
-                if(document.querySelectorAll('div.form-group.required')[i].querySelector(type).value == ''){
+            }else if(type == 'select'){
+                if(document.querySelectorAll('div.form-group.required')[i].querySelector('select').value == ''){
+                    document.querySelectorAll('div.form-group.required')[i].classList.add("has-error");
+                    document.querySelectorAll('div.form-group.required ')[i].querySelector('select').setAttribute('onchange',`check_validate(this,'${type}')`);
+                    document.querySelectorAll('div.form-group.required')[i].querySelector('span').classList.remove("hidden");
+                }
+            }else if(type == 'textarea'){
+                if(document.querySelectorAll('div.form-group.required')[i].querySelector('textarea').value == ''){
                     document.querySelectorAll('div.form-group.required')[i].classList.add("has-error");
                     document.querySelectorAll('div.form-group.required')[i].setAttribute('oninput',`check_validate(this,'${type}')`);
                     document.querySelectorAll('div.form-group.required')[i].querySelector('span').classList.remove("hidden");
@@ -420,6 +440,8 @@
             value = (ev.value == '') ? true : false;
         }else if(type == 'file'){
             value = (ev.querySelectorAll('input').files.length == 0 && ev.previousElementSibling.querySelector('.no_image') != null) ? true : false;
+        }else if(type == 'select'){
+            value = (ev.value == '') ? true : false;
         }else{
             value = (ev.querySelector(type).value) ? true : false;
         }

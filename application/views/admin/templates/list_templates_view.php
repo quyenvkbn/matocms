@@ -40,7 +40,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="col-md-6">
-                                <a href="<?php echo base_url('admin/'.$controller.'/create') ?>" class="btn btn-primary" role="button">Thêm mới</a>
+                                <span type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary" >Thêm mới</span>
                             </div>
                             <div class="col-md-6">
                                 <form action="<?php echo base_url('admin/'.$controller.'/index') ?>" method="get">
@@ -110,6 +110,28 @@
                 </div>
 
                 <!-- /.box -->
+            </div>
+        </div>
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Chọn cấu hình</h4>
+                    </div>
+                    <div class="modal-body" id="modal-form">
+                        <select name="" id="select_templates" class="form-control" required="required" onclick="submit_shared(this.value)">
+                            <option value="1">Post</option>
+                            <option value="2">Product</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default" id="submit_shared">Xác nhận</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -188,5 +210,9 @@
 
             );
         }
+    }
+    document.querySelector('.modal-footer a').setAttribute('href',HOSTNAMEADMIN+'/templates/create/'+document.getElementById('select_templates').value);
+    function submit_shared(val){
+        document.querySelector('.modal-footer a').setAttribute('href',HOSTNAMEADMIN+'/templates/create/'+val);
     }
 </script>

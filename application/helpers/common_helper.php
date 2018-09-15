@@ -15,7 +15,8 @@ if (!function_exists('handle_multi_language_request')) {
         for ($i = 0; $i < count($languages); $i++) {
             $converted_request[$i] = array($foreign_key => $id, 'language' => $languages[$i]);
             if(!empty($data_lang)){
-                $converted_request[$i] = array_merge($converted_request[$i],array('data_lang' => json_encode($data_lang[$languages[$i]])));
+                $data = (empty($data_lang[$languages[$i]]) ? '{}' : json_encode($data_lang[$languages[$i]]));
+                $converted_request[$i] = array_merge($converted_request[$i],array('data_lang' => $data));
             }
             for ($j = 0; $j < count($list_request); $j++) {
                 $language_type = explode('_', $list_request[$j]);
